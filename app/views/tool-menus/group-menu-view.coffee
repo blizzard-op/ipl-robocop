@@ -1,7 +1,6 @@
 View = require 'views/base/view'
 template = require 'views/templates/group-menu'
-Group = require 'models/brackets/group'
-IntToAlphabet = require 'utility/int-to-alphabet'
+GroupStage = require 'models/brackets/group-stage'
 Padding = require 'utility/brackets/bracket-padding'
 
 module.exports = class GroupMenuView extends View
@@ -46,7 +45,7 @@ module.exports = class GroupMenuView extends View
 					name: "TEAM X"
 			else
 				teams.pop()
-	
+
 	changeMatches: (group, targetNum)->
 		matches = group.get('matches')
 		matchLength = matches.length

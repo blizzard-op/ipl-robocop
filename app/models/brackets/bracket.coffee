@@ -1,7 +1,7 @@
 Model = require 'models/base/model'
 Matches = require 'collections/brackets/matches'
 Teams = require 'collections/brackets/teams'
-Groups = require 'collections/brackets/groups'
+GroupStages = require 'collections/brackets/group-stages'
 
 module.exports = class Bracket extends Model
 	defaults: ()->
@@ -12,7 +12,7 @@ module.exports = class Bracket extends Model
 		kind: "ipl6"
 		labels: []
 		matches: new Matches()
-		groups: new Groups()
+		groups: new GroupStages()
 		teams: new Teams()
 
 	hasLoserBracket: ()->
