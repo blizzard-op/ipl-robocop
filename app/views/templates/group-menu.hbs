@@ -1,0 +1,23 @@
+<form>
+	<fieldset>
+	<legend>Edit Groups</legend>
+	<ul>
+	{{#each groups}}
+		<li class="clearfix">
+			<strong>{{this.title}}</strong>
+			<div class="group-input">
+				<label>Players</label>
+				<input type="text" value="{{this.players}}" class="span1 group-players-input" >
+			</div>
+			<div class="group-input">
+				<label>Matches</label>
+				<input type="text" value="{{this.matches}}" class="span1 group-matches-input">
+			</div>
+		</li>
+	{{/each}}
+	</ul>
+	<hr>
+	<label>Add Group</label>
+	<button class="btn btn-success">+</button>
+	</fieldset>
+</form>
