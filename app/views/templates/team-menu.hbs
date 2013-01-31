@@ -1,0 +1,23 @@
+<form>
+	<legend>
+Team seeding
+	</legend>
+	<fieldset>
+		<label class="checkbox">
+			<input id="enable-seeding" type="checkbox" checked > Auto-seeding
+		</label>
+		<ol id="team-sort-list">
+{{#each teams}}
+	<li class="team-field">
+		<span class="team-label">{{this.name}}
+			<button class="btn btn-mini edit-team"><i class="icon-pencil"></i></button>
+		</span>
+		<span class="team-edit-label">
+			<input class="team-input" value="{{this.name}}" >
+			<button class="btn btn-mini edit-team"><i class="icon-ok"></i></button>
+		</span>
+	</li>	
+{{/each}}
+		</ol>
+	</fieldset>
+</form>
