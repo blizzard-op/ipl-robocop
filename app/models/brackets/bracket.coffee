@@ -14,9 +14,3 @@ module.exports = class Bracket extends Model
 		matches: new Matches()
 		groups: new GroupStages()
 		teams: new Teams()
-
-	hasLoserBracket: ()->
-		for match in matches
-			if match.get('loserDropsTo')? or match.get('hasLoserSlot')?
-				return true
-		return false
