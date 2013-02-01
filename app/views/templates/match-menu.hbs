@@ -1,18 +1,33 @@
 <form>
 	<fieldset>
 	<legend>Edit Match</legend>
-	<label>Start time</label>
-	<button class="btn">00/00/00</button>
-	<label>Teams</label>
-	<select id="team1" class="team-list" slot="0" >
-	</select>
 
-	<select id="team2" class="team-list" slot="1" >
-	</select>
+	<div id="teams-area">
+		<label>Title</label>
+		<input type="text" id="match-title" value="{{title}}">
+		<label>Teams</label>
+		<select id="team1" class="team-list" slot="0" >
+		</select>
+		<select id="team2" class="team-list" slot="1" >
+		</select>
+	</div>
 
-	<label>Best of</label>
-	<input type="text" class="span1 best-of-input" value={{bestOf}}>
-	<button class="btn btn-success">Start Game</button>
+	<div id="games-area">
+		<label>Best of</label>
+		<input type="text" class="span1 best-of-input" value={{bestOf}}>
+		<button class="btn btn-success">Start Game</button>
+	</div>
+
+	<div id="event-area">
+		<label>Stream</label>
+		<select id="stream-select" class="stream-list">
+		</select>
+		<label>Start time</label>
+		<input type="text" id="start-time" value="{{startsAt}}">
+		<label>Groups</label>
+		<select multiple="multiple" id="group-select">
+		</select></div>
+
 	<hr>
 	<a href="#">Click here to edit in IPL-Koala</a>
 	</fieldset>

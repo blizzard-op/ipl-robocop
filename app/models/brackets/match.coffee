@@ -19,6 +19,7 @@ module.exports = class Match extends Model
 		attr.parent = if attr.parent? then _.indexOf @collection.models, attr.parent else null
 		attr.children = for i in [0...attr.children.length]
 			if attr.children[i]? then _.indexOf(@collection.models, attr.children[i]) else null
+		attr.loserDropsTo = if attr.loserDropsTo? then _.indexOf(@collection.models, attr.loserDropsTo) else null
 		attr
 
 	whichSlot: (childMatch)->
@@ -44,3 +45,6 @@ module.exports = class Match extends Model
 
 	matchup: ()=>
 		@get('event').get('matchup')
+
+	event: ()=>
+		@get 'event'

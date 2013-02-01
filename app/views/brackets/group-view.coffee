@@ -1,5 +1,5 @@
 View = require 'views/base/view'
-template = require 'views/templates/brackets/group'
+template = require 'views/templates/brackets/group-stage'
 
 module.exports = class GroupView extends View
 	template: template

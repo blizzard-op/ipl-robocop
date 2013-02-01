@@ -1,5 +1,5 @@
 Model = require 'models/base/model'
-Group = require 'models/brackets/group'
+GroupStage = require 'models/brackets/group-stage'
 Teams = require 'collections/brackets/teams'
 Matches = require 'collections/brackets/matches'
 
@@ -18,4 +18,4 @@ module.exports = class GroupGenerator extends Model
 					bestOf: 1
 		options.teams = teamsCol
 		options.matches = matchCol
-		new Group(_.omit options, "numTeams", "numMatches")
+		new GroupStage(_.omit options, "numTeams", "numMatches")
