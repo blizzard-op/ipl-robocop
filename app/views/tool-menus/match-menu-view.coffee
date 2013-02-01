@@ -16,6 +16,7 @@ module.exports = class MatchMenuView extends View
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
 		'change .stream-list' : (ev)-> @saveStream(ev)
 		'change #match-title' : (ev)-> @saveTitle(ev)
+		'change #start-time' : (ev)-> @saveTime(ev)
 
 	initialize:(options)->
 		super
@@ -29,9 +30,12 @@ module.exports = class MatchMenuView extends View
 
 	render:->
 		super
+		unless @model?
+			return @
 		options = {}
-		options.title = @model?.get('event').get 'title'
-		options.bestOf = @model?.matchup().get 'best_of'
+		options.title = @model.event().get 'title'
+		options.bestOf = @model.matchup().get 'best_of'
+		options.startsAt = @model.event().get 'starts_at'
 		@$el.html @template( options )
 		teamList = for team in @bracket.get('teams').models when team?
 			team.get 'name'
@@ -48,6 +52,17 @@ module.exports = class MatchMenuView extends View
 						$(@).prop("selected", "selected")
 
 		@fillSelect @streams.models, '.stream-list', @model?.get('event').get('stream')?.name
+
+		@.$('#start-time').datetimepicker
+			timeFormat: "hh:mm tt z"
+			showTimezone: true
+			timezone: "PT"
+			hourGrid: 4
+			minuteGrid: 10
+			timezoneList: [
+				{ value: 'GMT', label: 'GMT'},
+				{ value: 'PT', label: 'Pacific' }
+			]
 		@
 
 	fillSelect: (list, elName, defaultVal=null)=>
@@ -61,6 +76,9 @@ module.exports = class MatchMenuView extends View
 		teams = _.clone(@model.teams())
 		teams[parseInt($(ev.currentTarget).attr('slot'))] = @bracket.get('teams').where({name: $(ev.currentTarget).val()})[0]
 		@model.teams(teams)
+		teamNames = _.map teams, (team)=> team.get 'name'
+		@model.event().set 'title', teamNames.join(" vs. ")
+		@render()
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()
@@ -81,3 +99,6 @@ module.exports = class MatchMenuView extends View
 		@model.get('event').set 'stream',
 			id: sId.id
 			name: sName
+
+	saveTime: (ev)=>
+		@model.event().set 'starts_at', $(ev.currentTarget).val()

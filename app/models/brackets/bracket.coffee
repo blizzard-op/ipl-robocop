@@ -14,3 +14,7 @@ module.exports = class Bracket extends Model
 		matches: new Matches()
 		groups: new GroupStages()
 		teams: new Teams()
+
+	parse:(data)=>
+		super data
+		console.log @get 'matches'
