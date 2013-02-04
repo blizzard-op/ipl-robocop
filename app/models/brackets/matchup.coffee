@@ -13,6 +13,10 @@ module.exports = class Matchup extends Model
 		@updateGamesCount()
 		@on 'change:best_of', ()=> @updateGamesCount()
 
+	parse: (data)->
+		data.games = @get('games').reset(data.games)
+		@
+
 	updateGamesCount: ()=>
 		bestOf = @get 'best_of'
 		games = for i in [0...bestOf]

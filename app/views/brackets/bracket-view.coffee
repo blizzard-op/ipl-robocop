@@ -27,6 +27,7 @@ module.exports = class BracketView extends View
 
 	render: ->
 		super
+		console.log "rendered"
 		matches = @model.get 'matches'
 		groups = @model.get 'groups'
 		seed = RootFinder.find(matches.models)

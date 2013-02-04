@@ -24,6 +24,7 @@ module.exports = class MatchMenuView extends View
 		@streams = new Streams()
 		@streams.fetch
 			url: "http://esports.ign.com/content/v2/streams.json?callback=?"
+			cached:true
 		@groups = []
 
 		@bracket = options.bracket
@@ -52,8 +53,8 @@ module.exports = class MatchMenuView extends View
 						$(@).prop("selected", "selected")
 
 		@fillSelect @streams.models, '.stream-list', @model?.get('event').get('stream')?.name
-
 		@.$('#start-time').datetimepicker
+			# 2013-01-23T14:37:54-08:00
 			timeFormat: "hh:mm tt z"
 			showTimezone: true
 			timezone: "PT"
@@ -102,3 +103,4 @@ module.exports = class MatchMenuView extends View
 
 	saveTime: (ev)=>
 		@model.event().set 'starts_at', $(ev.currentTarget).val()
+		@model.event().set 'ends_at', moment($(ev.currentTarget).val(), "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")

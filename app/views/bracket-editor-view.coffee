@@ -13,7 +13,6 @@ module.exports = class BracketEditorView extends BracketView
 	render: ->
 		super
 		$('<div class="hotzone">').appendTo(@$el).width(@$el.width()).height(@$el.height())
-
 		@
 	clickMatch: (ev)->
 		unless ev.shiftKey is true
@@ -22,11 +21,11 @@ module.exports = class BracketEditorView extends BracketView
 		@selected.push $(ev.currentTarget).data('match')
 		mediator.publish 'change:selected', @selected
 
+
 	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'
 		@selected = []
-		@model.url = ()->"http://test.ign.com:2121/barf/"
-
+		@model.url = ()->"http://test.ign.com:2121/brackets/v6/api/"
 		@model.save()
 
 		# Backbone.sync "create", @model,
