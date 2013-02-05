@@ -54,16 +54,11 @@ module.exports = class MatchMenuView extends View
 
 		@fillSelect @streams.models, '.stream-list', @model?.get('event').get('stream')?.name
 		@.$('#start-time').datetimepicker
-			# 2013-01-23T14:37:54-08:00
-			timeFormat: "hh:mm tt z"
-			showTimezone: true
-			timezone: "PT"
+			timeFormat: "hh:mm ttz"
+			showTimezone: false
+			timezone: "-0800"
 			hourGrid: 4
 			minuteGrid: 10
-			timezoneList: [
-				{ value: 'GMT', label: 'GMT'},
-				{ value: 'PT', label: 'Pacific' }
-			]
 		@
 
 	fillSelect: (list, elName, defaultVal=null)=>

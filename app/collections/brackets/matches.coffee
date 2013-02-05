@@ -34,6 +34,4 @@ module.exports = class Matches extends Collection
 				else
 					null
 			updated[j].set 'children', nc
-			console.log nc
-		# console.log updated
 		updated

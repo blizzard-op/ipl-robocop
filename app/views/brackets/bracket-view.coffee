@@ -27,7 +27,6 @@ module.exports = class BracketView extends View
 
 	render: ->
 		super
-		console.log "rendered"
 		matches = @model.get 'matches'
 		groups = @model.get 'groups'
 		seed = RootFinder.find(matches.models)
@@ -49,6 +48,12 @@ module.exports = class BracketView extends View
 			gv.$el.data 'group', gv.model
 			gv.$el.appendTo @$el.find('.match-layer')
 		Padding.updateBounds()
+		# place title
+		@.$('span.bracket-title h1').text(@model.get 'title')
+		@.$('span.bracket-title').css
+			position: 'absolute'
+			top: Padding.padding.top - 70
+			left: Padding.padding.left
 		#connect everything
 		for match in matches.models
 			if match.get('children').length > 0
