@@ -18,16 +18,21 @@ module.exports = class WizardMenuView extends View
 		'change #num-players': ()-> @changePlayers()
 		'click .btn-primary': ()-> @clickWizard()
 		'submit': ()-> false
+
 	initialize: (options)->
 		@bracket = options.bracket
 		@doubleElimGen = new DoubleElim()
 		super
+
 	changePlayers:=>
 		@model.set 'numPlayers', parseInt @.$('#num-players').val()
+
 	clickWizard:=>
 		fullTree = @model.generate()
-		loserTree = @doubleElimGen.generate( @model.get('numPlayers'), fullTree )
-		wlb = FlattenTree.flatten(Fuser.fuse(RootFinder.find(fullTree), RootFinder.find(loserTree)))
+		wlb = fullTree
+		if @.$('input:radio[name ="optionsRadios"]:checked').val() is "double"
+			loserTree = @doubleElimGen.generate( @model.get('numPlayers'), fullTree )
+			wlb = FlattenTree.flatten(Fuser.fuse(RootFinder.find(fullTree), RootFinder.find(loserTree)))
 		matches = MatchPruner.prune(wlb, parseInt @.$('#num-players').val())
 		@bracket.get('matches').reset( matches )
 		@bracket.get('teams').reset( @model.makeTeams() )
