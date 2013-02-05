@@ -20,3 +20,8 @@ module.exports = class Event extends Model
 		data.matchup = @get('matchup').parse(data.matchup)
 		data.starts_at = moment(data.starts_at, "MM-DD-YYYYTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
 		@
+
+	autoTitle:=>
+		teams= for i in [0...2]
+			if @get('matchup').get('teams')[i]? then @get('matchup').get('teams')[i].get 'name' else "TBD"
+		@set 'title', teams.join " vs. "

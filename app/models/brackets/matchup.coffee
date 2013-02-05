@@ -1,6 +1,7 @@
 Model = require 'models/base/model'
 Game = require 'models/brackets/game'
 Games = require 'collections/brackets/games'
+MatchTeam = require 'models/brackets/match-team'
 
 module.exports = class Matchup extends Model
 	defaults: ()->
@@ -14,7 +15,13 @@ module.exports = class Matchup extends Model
 		@on 'change:best_of', ()=> @updateGamesCount()
 
 	parse: (data)->
-		data.games = @get('games').reset(data.games)
+		nTeams = for i, team of data.teams
+			matchTeams = @get 'teams'
+			if matchTeams[i]?
+				matchTeams[i].set team
+			else
+				matchTeams[i] = new MatchTeam(team)
+		data.games = @get('games').update(data.games, {parse:true})
 		@
 
 	updateGamesCount: ()=>
