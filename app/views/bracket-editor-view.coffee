@@ -1,7 +1,7 @@
 View = require 'views/base/view'
 Collection = require 'models/base/collection'
 BracketView = require 'views/brackets/bracket-view'
-# Matches = require 'collections/brackets/matches' 
+# Matches = require 'collections/brackets/matches'
 mediator = require 'mediator'
 
 module.exports = class BracketEditorView extends BracketView
@@ -21,13 +21,15 @@ module.exports = class BracketEditorView extends BracketView
 		$(ev.currentTarget).addClass 'activeSelect'
 		@selected.push $(ev.currentTarget).data('match')
 		mediator.publish 'change:selected', @selected
-		
-	deselect: ()=>			
+
+	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'
 		@selected = []
-		# @model.url = ()->"http://test.ign.com:8080/barf/?callback=jsonp"
-		# # console.log @model.toJSON()
+		@model.url = ()->"http://test.ign.com:2121/barf/"
+
+		@model.save()
 
 		# Backbone.sync "create", @model,
+		# 	jsonpCallback: "jsonp"
 		# 	success: (data)-> console.log data
 		# 	error: (er, xr)-> console.log er, xr, "problem"

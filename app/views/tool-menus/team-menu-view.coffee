@@ -25,7 +25,7 @@ module.exports = class TeamMenuView extends View
 			url: "http://esports.ign.com/content/v2/teams.json?per_page=1000"
 			jsonpCallback: "jsonp"
 			dataType: "jsonp"
-			success: (data)=>
+			success: (data) =>
 				@teamlist = for a in data
 					@idLookup[a.name] = a.id
 					a.name
@@ -34,7 +34,7 @@ module.exports = class TeamMenuView extends View
 		super
 		teamObs = for a in @teams.models
 			name: a.get('name')
-		
+
 		@$el.html @template( { teams: teamObs })
 
 		@teams.each (team)=>

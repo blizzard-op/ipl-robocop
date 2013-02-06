@@ -3,7 +3,7 @@ Matches = require 'collections/brackets/matches'
 Teams = require 'collections/brackets/teams'
 
 
-module.exports = class Group extends Model
+module.exports = class GroupStage extends Model
 	defaults: ()->
 		title: "Group"
 		teams: new Teams()
