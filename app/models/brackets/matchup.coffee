@@ -21,6 +21,7 @@ module.exports = class Matchup extends Model
 				matchTeams[i].set team
 			else
 				matchTeams[i] = new MatchTeam(team)
+				matchTeams[i].set 'points', team.points
 		data.games = @get('games').update(data.games, {parse:true})
 		@
 
@@ -35,7 +36,6 @@ module.exports = class Matchup extends Model
 		for team in @get 'teams' when team.get('name') is teamName
 			team.set 'points', team.get('points') + 1
 			if team.get('points') > @get('best_of') / 2
-				return team
+				return {winner:team, matchDecided:true}
 			else
-				return null
-
+				return {winner:team, matchDecided:false}

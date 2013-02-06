@@ -79,11 +79,11 @@ module.exports = class MatchMenuView extends View
 		false
 
 	endGame: (ev)=>
-		winner = @model.matchup().pointFor @.$(ev.currentTarget).text()
-		@model.games().next()
-		if winner?
+		result = @model.matchup().pointFor @.$(ev.currentTarget).text()
+		@model.games().next(result.winner)
+		if result.matchDecided
 			@model.games().each (game)=> game.set 'status', 'finished'
-			@model.advance(winner)
+			@model.advance(result.winner)
 		@render()
 		false
 

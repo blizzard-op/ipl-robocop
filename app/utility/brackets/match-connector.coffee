@@ -8,7 +8,6 @@ module.exports = class MatchConnector
 			childView = @findView child, matchViews
 
 			if childView?
-				console.log childView.$el.outerWidth()
 				y = Math.min childView.$el.position().top, y
 				x = Math.min childView.$el.position().left + childView.$el.outerWidth(), x
 				h = Math.max childView.$el.position().top, h
