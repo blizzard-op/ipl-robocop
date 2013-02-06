@@ -7,6 +7,8 @@ mediator = require 'mediator'
 module.exports = class BracketEditorView extends BracketView
 	initialize:(options)->
 		super(options)
+		@model.url = ()->"http://test.ign.com:2121/brackets/v6/api/"
+		mediator.subscribe 'save-bracket', @saveBracket
 		@delegate 'click', '.match', (ev)->@clickMatch(ev)
 		@delegate 'click', '.hotzone', ()-> @deselect()
 		@delegate 'click', '.bracket-title', (ev)->@editTitle(ev)
@@ -19,6 +21,9 @@ module.exports = class BracketEditorView extends BracketView
 		$('<input type="text" class="bracket-title-input">').appendTo(@.$('.label-layer span.bracket-title'))
 		@
 
+	saveBracket: ()=>
+		@model.save()
+
 	clickMatch: (ev)->
 		unless ev.shiftKey is true
 			@deselect()
@@ -29,15 +34,12 @@ module.exports = class BracketEditorView extends BracketView
 	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'
 		@selected = []
-		@model.url = ()->"http://test.ign.com:2121/brackets/v6/api/"
-		@model.save()
 
 		# Backbone.sync "create", @model,
 		# 	jsonpCallback: "jsonp"
 		# 	success: (data)-> console.log data
 		# 	error: (er, xr)-> console.log er, xr, "problem"
 	editTitle: (ev)=>
-		# console.log "clicked title"
 		$(ev.currentTarget).addClass 'editing'
 		$(ev.currentTarget).find('input').focus().val @model.get('title')
 
@@ -47,4 +49,5 @@ module.exports = class BracketEditorView extends BracketView
 		@model.set 'title', newTitle
 		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-')
 		@.$('.bracket-title h1').text newTitle
+		mediator.publish 'save-bracket'
 

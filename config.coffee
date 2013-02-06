@@ -4,6 +4,7 @@ exports.config =
     javascripts:
       joinTo:
         'javascripts/app.js': /^app/
+        'javascripts/bracket-view.js': /^app(?=.*[\\/]bracket)/
         'javascripts/vendor.js': /^vendor/
         'test/javascripts/test.js': /^test[\\/](?!vendor)/
         'test/javascripts/test-vendor.js': /^test[\\/](?=vendor)/
@@ -31,4 +32,6 @@ exports.config =
           'vendor/styles/bootstrap-responsive.min.css'
         ]
     templates:
-      joinTo: 'javascripts/app.js'
+      joinTo:
+        'javascripts/app.js': /^app/
+        'javascripts/view-templates.js': /^app/
