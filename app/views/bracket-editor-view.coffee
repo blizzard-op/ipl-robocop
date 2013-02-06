@@ -47,3 +47,4 @@ module.exports = class BracketEditorView extends BracketView
 		@model.set 'title', newTitle
 		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-')
 		@.$('.bracket-title h1').text newTitle
+

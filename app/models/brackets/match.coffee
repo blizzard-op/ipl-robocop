@@ -1,5 +1,6 @@
 Model = require 'models/base/model'
 Event = require 'models/brackets/event'
+MatchTeam = require 'models/brackets/match-team'
 
 module.exports = class Match extends Model
 	defaults: ()->
@@ -28,9 +29,23 @@ module.exports = class Match extends Model
 		attr.parent = if attr.parent? then _.indexOf @collection.models, attr.parent else null
 		attr.children = for i in [0...attr.children.length]
 			if attr.children[i]? then _.indexOf(@collection.models, attr.children[i]) else null
-		attr.loserDropsTo = if attr.loserDropsTo? then _.indexOf(@collection.models, attr.loserDropsTo) else null
+		if attr.loserDropsTo?
+			attr.loserDropsTo.match = _.indexOf(@collection.models, attr.loserDropsTo.match)
+		else
+			attr.loserDropsTo = null
+
 		@set 'id', attr.id
 		attr
+
+	advance: (team)=>
+		parent = @get 'parent'
+		if parent?
+			parent.team(parent.whichSlot(@), new MatchTeam(team.attributes))
+		loserMatch = @get 'loserDropsTo'
+		if loserMatch?
+			# console.log loserMatch.slot
+			loser = if @teams()[0].get('name') is team.get('name') then @teams()[1] else @teams()[0]
+			loserMatch.match.team(loserMatch.slot, new MatchTeam(loser.attributes))
 
 	whichSlot: (childMatch)->
 		unless _.contains(@get('children'), childMatch)
@@ -52,6 +67,7 @@ module.exports = class Match extends Model
 	team: (at, team=null)=>
 		if team?
 			@teams()[at] = team
+			@matchup().trigger 'change:teams'
 		@teams()[at]
 
 	matchup: ()=>
@@ -59,3 +75,6 @@ module.exports = class Match extends Model
 
 	event: ()=>
 		@get 'event'
+
+	games: ()=>
+		@matchup().get 'games'

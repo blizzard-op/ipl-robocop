@@ -30,3 +30,12 @@ module.exports = class Matchup extends Model
 			new Game
 				number: i+1
 		@get('games').reset(games)
+
+	pointFor: (teamName)=>
+		for team in @get 'teams' when team.get('name') is teamName
+			team.set 'points', team.get('points') + 1
+			if team.get('points') > @get('best_of') / 2
+				return team
+			else
+				return null
+

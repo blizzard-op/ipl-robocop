@@ -3,6 +3,7 @@ template = require 'views/templates/match-menu'
 Matches = require 'collections/brackets/matches'
 mediator = require 'mediator'
 Streams = require 'collections/brackets/streams'
+GameSubView = require 'views/game-sub-view'
 
 module.exports = class MatchMenuView extends View
 	autoRender: true
@@ -11,12 +12,13 @@ module.exports = class MatchMenuView extends View
 	id: "match-menu"
 	className: "admin-menu"
 	events:
-		'click .btn' : ()-> false
+		'click #start-game-btn' : ()-> @startGame()
 		'change .team-list' : (ev)-> @saveTeam(ev)
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
 		'change .stream-list' : (ev)-> @saveStream(ev)
 		'change #match-title' : (ev)-> @saveTitle(ev)
 		'change #start-time' : (ev)-> @saveTime(ev)
+		'click .team-btn' : (ev)-> @endGame(ev)
 
 	initialize:(options)->
 		super
@@ -59,7 +61,31 @@ module.exports = class MatchMenuView extends View
 			timezone: "-0800"
 			hourGrid: 4
 			minuteGrid: 10
+
+		if @model.games().first().get('status') isnt 'ready'
+			@renderGames()
+			@.$('#start-game-btn').hide()
+
 		@
+
+	renderGames: ()=>
+		@gameViews = @model.games().map (game)=>
+			new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+		false
+
+	startGame: ()=>
+		@model.games().first().set 'status', 'in progress'
+		@render()
+		false
+
+	endGame: (ev)=>
+		winner = @model.matchup().pointFor @.$(ev.currentTarget).text()
+		@model.games().next()
+		if winner?
+			@model.games().each (game)=> game.set 'status', 'finished'
+			@model.advance(winner)
+		@render()
+		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
 		$('<option></option>').appendTo(@.$(elName))

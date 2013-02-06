@@ -6,6 +6,12 @@ module.exports = class Games extends Collection
 
 	comparator: (game)-> game.get 'number'
 
+	next: ()=>
+		firstInProgress = @find (game)-> game.get('status') is 'in progress'
+		firstReady = @find (game)-> game.get('status') is 'ready'
+		firstInProgress?.set 'status', 'finished'
+		firstReady?.set 'status', 'in progress'
+
 	parse: (models)=>
 		updated = []
 		for i in [0...models.length]

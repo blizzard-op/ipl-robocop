@@ -19,18 +19,18 @@ module.exports = class Matches extends Collection
 				newMatch.set newMatch.parse(match)
 				updated.push newMatch
 		for j, match of updated
-			if @at(match.get 'parent')?
-				updated[j].set 'parent', @at(match.get 'parent')
+			if updated[match.get 'parent']?
+				updated[j].set 'parent', updated[match.get 'parent']
 			else
 				match.set 'parent', null
-			if @at(match.get('loserDropsTo'))?
-				match.set 'loserDropsTo', @at(match.get('loserDropsTo'))
+			if updated[match.get('loserDropsTo')?.match]?
+				match.set 'loserDropsTo', {match: updated[match.get('loserDropsTo').match], slot: match.get('loserDropsTo').slot}
 			else
 				match.set 'loserDropsTo', null
 
 			nc = for i, child of match.get 'children'
-				if @at(i)?
-					@at( i )
+				if updated[child]?
+					updated[child]
 				else
 					null
 			updated[j].set 'children', nc

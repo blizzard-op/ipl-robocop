@@ -6,7 +6,9 @@ module.exports = class MatchConnector
 		h = 0
 		for child in root.get 'children'
 			childView = @findView child, matchViews
+
 			if childView?
+				console.log childView.$el.outerWidth()
 				y = Math.min childView.$el.position().top, y
 				x = Math.min childView.$el.position().left + childView.$el.outerWidth(), x
 				h = Math.max childView.$el.position().top, h
@@ -29,7 +31,6 @@ module.exports = class MatchConnector
 				height: rootView.$el.outerHeight()
 			$('<div class="top-line full-width">').appendTo $el
 			$('<div class="bottom-line full-width">').appendTo $el
-
 
 		$el
 	@findView: (root, matchViews)->

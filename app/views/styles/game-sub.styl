@@ -1,0 +1,31 @@
+@import 'nib'
+
+#games-area
+	ul
+		list-style: none
+		padding:2px
+		margin:0
+	div.ready
+		background: #777
+		padding: 2px
+		margin 1px 0
+		color:#fff
+	div.in-progress
+		margin-bottom: 12px
+
+	li.in-progress
+		div.finished
+			display:none
+		div.in-progress
+			display:block
+	li.finished
+		div.in-progress
+			display:none
+		div.finished
+			display:block
+	li.ready
+		div.in-progress
+			display:none
+		div.finished
+			display:none
+

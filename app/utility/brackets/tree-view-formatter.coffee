@@ -6,6 +6,7 @@ module.exports = class TreeViewFormatter
 		# console.log root.get('children')[1].get 'hasLoserSlot']
 		loserHead = root.get('children')[1]
 		winnerHead = root.get('children')[0]
+		console.log root
 		if root.get('children')[1].get 'hasLoserSlot'
 			loserRounds = Rounds.convert loserHead
 			winnerRounds = Rounds.convert winnerHead

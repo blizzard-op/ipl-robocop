@@ -22,6 +22,7 @@ module.exports = class Bracket extends Model
 		@get('teams').update(data.teams)
 		data.teams = @get('teams')
 		matches = @get('matches')
+
 		matches.update(data.matches, {parse:true})
 		data.groups = @get 'groups'
 		data.matches = matches
