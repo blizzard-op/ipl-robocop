@@ -11,7 +11,6 @@ module.exports = class TreeViewFormatter
 			winnerRounds = Rounds.convert winnerHead
 			lMax = @singleTree(loserRounds, xSpacing, ySpacing)
 
-			# ws = lMax.x
 			winnerSpacing = ((lMax.x)) / (winnerRounds.length-1)
 			wMax = @singleTree(winnerRounds, winnerSpacing, ySpacing)
 			@addOffset loserHead, 0, wMax.y + ySpacing + 20
