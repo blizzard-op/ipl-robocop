@@ -61,6 +61,7 @@ module.exports = class TeamMenuView extends View
 		team.set 'name', $(ev.currentTarget).val()
 		team.set 'id', @idLookup[$(ev.currentTarget).val()]
 		@.$('li').removeClass('edit')
+		@model.retitleSeeds()
 		false
 
 	# enterKey: (ev)->
