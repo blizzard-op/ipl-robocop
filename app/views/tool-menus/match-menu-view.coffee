@@ -117,12 +117,11 @@ module.exports = class MatchMenuView extends View
 		@render()
 
 	renderGroups: (ev)->
-		# console.log @model.event().get 'groups'
-		# toSelect =
 		for group in @groups
-			cSelect = $('<option></option>').appendTo(@.$('#group-select')).text group.name
-			# console.log _.findWhere @model.groups, {slug: group.slug}
-
+			$cSelect = $('<option></option>').appendTo(@.$('#group-select')).text group.name
+			hasGroup = _.findWhere @model.event().get('groups'), {slug: group.slug}
+			if hasGroup?
+				$cSelect.prop("selected", "selected")
 
 	saveGroups: (ev)->
 		true
