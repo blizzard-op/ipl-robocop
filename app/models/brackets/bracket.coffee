@@ -20,6 +20,7 @@ module.exports = class Bracket extends Model
 
 	parse:(data)=>
 		@get('teams').update(data.teams)
+		@get('teams').trigger 'sync'
 		data.teams = @get('teams')
 		matches = @get('matches')
 		matches.update(data.matches, {parse:true})

@@ -18,7 +18,7 @@ module.exports = class TeamMenuView extends View
 		super
 		@bracket = options.bracket
 		@teams = @bracket.get('teams')
-		@listenTo @teams, 'reset', @render
+		@listenTo @teams, 'sync', @render
 		@listenTo @teams, 'change:name', @render
 		@idLookup = {}
 		$.ajax
@@ -30,6 +30,7 @@ module.exports = class TeamMenuView extends View
 					@idLookup[a.name] = a.id
 					a.name
 
+
 	render: ()->
 		super
 		teamObs = for a in @teams.models
@@ -39,7 +40,7 @@ module.exports = class TeamMenuView extends View
 		if @model?
 			@.$('#enable-seeding').prop('checked', @model.get('enabled'))
 			@teams.each (team)=>
-				@.$('li').eq( team.get('seed')-1 ).data 'team', team
+				@.$('li').eq( team.get('seed') - 1 ).data 'team', team
 			@.$('#team-sort-list').sortable
 				update: @sortUpdate
 			@.$('input.team-input').typeahead
