@@ -27,7 +27,7 @@ module.exports = class SingleElimWizard extends Model
 
 		_.each @get('matchBuffer'), (match)->
 			_.each match.teams(), (team)->
-				team.set 'name', ""
+				team.set 'name', "TBD"
 		@get 'matchBuffer'
 
 	#returns a list of players

@@ -30,7 +30,6 @@ module.exports = class TeamMenuView extends View
 					@idLookup[a.name] = a.id
 					a.name
 
-
 	render: ()->
 		super
 		teamObs = for a in @teams.models
