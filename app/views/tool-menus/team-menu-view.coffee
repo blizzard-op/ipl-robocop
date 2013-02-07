@@ -18,6 +18,7 @@ module.exports = class TeamMenuView extends View
 		super
 		@bracket = options.bracket
 		@teams = @bracket.get('teams')
+		@listenTo @teams, 'reset', @render
 		@listenTo @teams, 'sync', @render
 		@listenTo @teams, 'change:name', @render
 		@idLookup = {}
