@@ -6,23 +6,32 @@ div.match
 	border-radius: 6px
 	width:160px
 	height 48px
-	padding: 2px 26px 2px 2px
+	padding: 2px 2px 2px 2px
 	display:table
-	box-shadow: 2px 2px 10px rgba(0,0,19,.25)
+	box-shadow: 2px 2px 10px rgba(0, 0, 19 , .25)
 	.team-label
 		background-color: #eee
 		color:#333
-		width:100%
+		width:80%
 		padding-left: 6px
+		float:left
 		height:20px
 		display:block
-		clear:both
+		clear:left
 		text-overflow: ellipsis
 		white-space: nowrap
-
+		cursor: default
+	.team-score
+		clear: right
+		width: 20%
+		float:left
+		color: #fff
+		font-weight:bold
+		text-align:center
+		cursor: default
 	.team-label:first-child
 		border-radius: 3px 3px 0 0
 		background-image:linear-gradient(top, #fff, #e6e6e6)
-	.team-label:last-child
+	.team-label:nth-child(3)
 		border-radius: 0 0 3px 3px
 		background-image:linear-gradient(top, #e6e6e6, #fff)

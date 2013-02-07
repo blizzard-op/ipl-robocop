@@ -37,6 +37,7 @@ module.exports = class SingleElimWizard extends Model
 			teams[i] = new MatchTeam
 				seed: i + 1
 				name: (i + 1) + " TBD"
+				id: "tid"+i
 
 	# recursive funcion to make child matches out to a certain depth
 	makeMatches: (thisMatch, depth, maxDepth)=>

@@ -3,6 +3,7 @@ template = require 'views/templates/match-menu'
 Matches = require 'collections/brackets/matches'
 mediator = require 'mediator'
 Streams = require 'collections/brackets/streams'
+GameSubView = require 'views/game-sub-view'
 
 module.exports = class MatchMenuView extends View
 	autoRender: true
@@ -11,12 +12,13 @@ module.exports = class MatchMenuView extends View
 	id: "match-menu"
 	className: "admin-menu"
 	events:
-		'click .btn' : ()-> false
+		'click #start-game-btn' : ()-> @startGame()
 		'change .team-list' : (ev)-> @saveTeam(ev)
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
 		'change .stream-list' : (ev)-> @saveStream(ev)
 		'change #match-title' : (ev)-> @saveTitle(ev)
 		'change #start-time' : (ev)-> @saveTime(ev)
+		'click .team-btn' : (ev)-> @endGame(ev)
 
 	initialize:(options)->
 		super
@@ -24,6 +26,7 @@ module.exports = class MatchMenuView extends View
 		@streams = new Streams()
 		@streams.fetch
 			url: "http://esports.ign.com/content/v2/streams.json?callback=?"
+			cached:true
 		@groups = []
 
 		@bracket = options.bracket
@@ -52,18 +55,37 @@ module.exports = class MatchMenuView extends View
 						$(@).prop("selected", "selected")
 
 		@fillSelect @streams.models, '.stream-list', @model?.get('event').get('stream')?.name
-
 		@.$('#start-time').datetimepicker
-			timeFormat: "hh:mm tt z"
-			showTimezone: true
-			timezone: "PT"
+			timeFormat: "hh:mm ttz"
+			showTimezone: false
+			timezone: "-0800"
 			hourGrid: 4
 			minuteGrid: 10
-			timezoneList: [
-				{ value: 'GMT', label: 'GMT'},
-				{ value: 'PT', label: 'Pacific' }
-			]
+
+		if @model.games().first().get('status') isnt 'ready'
+			@renderGames()
+			@.$('#start-game-btn').hide()
+
 		@
+
+	renderGames: ()=>
+		@gameViews = @model.games().map (game)=>
+			new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+		false
+
+	startGame: ()=>
+		@model.games().first().set 'status', 'in progress'
+		@render()
+		false
+
+	endGame: (ev)=>
+		result = @model.matchup().pointFor @.$(ev.currentTarget).text()
+		@model.games().next(result.winner)
+		if result.matchDecided
+			@model.games().each (game)=> game.set 'status', 'finished'
+			@model.advance(result.winner)
+		@render()
+		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
 		$('<option></option>').appendTo(@.$(elName))
@@ -102,3 +124,4 @@ module.exports = class MatchMenuView extends View
 
 	saveTime: (ev)=>
 		@model.event().set 'starts_at', $(ev.currentTarget).val()
+		@model.event().set 'ends_at', moment($(ev.currentTarget).val(), "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")

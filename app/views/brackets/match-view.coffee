@@ -14,9 +14,12 @@ module.exports = class MatchView extends View
 
 	render:->
 		super
-		teamNames = for a in @model.teams()
-			if a? then a.get 'name' else ''
-		@$el.html @template({teams: teamNames})
+		teamsObs = for a in @model.teams()
+			team = {}
+			team.name = if a? then a.get 'name' else ''
+			team.points = if a? and a.get('name') isnt '' then a.get 'points' else ''
+			team
+		@$el.html @template({teams: teamsObs})
 		@updatePosition()
 		@
 

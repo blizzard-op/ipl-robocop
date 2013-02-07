@@ -41,3 +41,4 @@ module.exports = class TeamAutoSeeder extends Model
 				teams = _.clone(seedMatches[parseInt(i)+1].match.teams())
 				teams[seedMatches[parseInt(i)+1].slot] = team
 				seedMatches[parseInt(i)+1].match.matchup().set 'teams', teams
+				seedMatches[parseInt(i)+1].match.event().autoTitle()

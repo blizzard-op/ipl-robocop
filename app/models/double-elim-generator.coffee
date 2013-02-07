@@ -59,5 +59,8 @@ module.exports = class DoubleElimGenerator extends Model
 	findFirst: (seed, loserRounds)->
 		for i in [0...loserRounds.length]
 			for j in [0...loserRounds[i].length]
-				if _.find(loserRounds[i][j].teams(), (team)-> team.get('seed') is seed)?
-					return loserRounds[i][j]
+				teams = loserRounds[i][j].teams()
+				if _.find(teams, (team)-> team.get('seed') is seed)?
+					# console.log loserRounds[i][j]
+
+					return {match: loserRounds[i][j], slot: if teams[0].get('seed') is seed then 0 else 1}
