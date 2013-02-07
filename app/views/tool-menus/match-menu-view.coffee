@@ -67,6 +67,8 @@ module.exports = class MatchMenuView extends View
 			hourGrid: 4
 			minuteGrid: 10
 
+		@renderGroups()
+
 		if @model.games().first().get('status') isnt 'ready'
 			@renderGames()
 			@.$('#start-game-btn').hide()
@@ -113,6 +115,17 @@ module.exports = class MatchMenuView extends View
 		@model.event().set 'title', teamNames.join(" vs. ")
 		mediator.publish 'save-bracket'
 		@render()
+
+	renderGroups: (ev)->
+		# console.log @model.event().get 'groups'
+		# toSelect =
+		for group in @groups
+			cSelect = $('<option></option>').appendTo(@.$('#group-select')).text group.name
+			# console.log _.findWhere @model.groups, {slug: group.slug}
+
+
+	saveGroups: (ev)->
+		true
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()
