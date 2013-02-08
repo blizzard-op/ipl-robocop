@@ -42,3 +42,8 @@ module.exports = class TeamAutoSeeder extends Model
 				teams[seedMatches[parseInt(i)+1].slot] = team
 				seedMatches[parseInt(i)+1].match.matchup().set 'teams', teams
 				seedMatches[parseInt(i)+1].match.event().autoTitle()
+
+	retitleSeeds:()=>
+		seedMatches = @get 'seedMatches'
+		for container in seedMatches when container?
+			container.match.event().autoTitle()
