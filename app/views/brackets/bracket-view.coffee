@@ -30,7 +30,7 @@ module.exports = class BracketView extends View
 		matches = @model.get 'matches'
 		groups = @model.get 'groups'
 		seed = RootFinder.find(matches.models)
-		# rnds = Rounds.convert seed
+
 		matchViews = []
 		unless seed?
 			return @

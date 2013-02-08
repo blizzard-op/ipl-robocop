@@ -27,8 +27,11 @@ module.exports = class MatchMenuView extends View
 		@streams.fetch
 			url: "http://esports.ign.com/content/v2/streams.json?callback=?"
 			cached:true
-		@groups = []
-
+		$.ajax
+			url: "http://esports.ign.com/content/v2/groups.json"
+			cached:true
+			success:(data)=>
+				@groups = data
 		@bracket = options.bracket
 
 	render:->
@@ -55,6 +58,7 @@ module.exports = class MatchMenuView extends View
 						$(@).prop("selected", "selected")
 
 		@fillSelect @streams.models, '.stream-list', @model?.get('event').get('stream')?.name
+
 		@.$('#start-time').datetimepicker
 			timeFormat: "hh:mm ttz"
 			showTimezone: false
@@ -85,6 +89,7 @@ module.exports = class MatchMenuView extends View
 			@model.games().each (game)=> game.set 'status', 'finished'
 			@model.advance(result.winner)
 		@render()
+		mediator.publish 'save-bracket'
 		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
@@ -100,6 +105,7 @@ module.exports = class MatchMenuView extends View
 		@model.teams(teams)
 		teamNames = _.map teams, (team)=> team.get 'name'
 		@model.event().set 'title', teamNames.join(" vs. ")
+		mediator.publish 'save-bracket'
 		@render()
 
 	saveTitle: (ev)->
@@ -107,6 +113,7 @@ module.exports = class MatchMenuView extends View
 
 	saveBestOf:(ev)->
 		@model.matchup().set 'best_of', parseInt @.$(ev.currentTarget).val()
+		mediator.publish 'save-bracket'
 
 	selectionChanged: (selected) ->
 		@toolbar.openMenu 'match-menu'
@@ -121,7 +128,9 @@ module.exports = class MatchMenuView extends View
 		@model.get('event').set 'stream',
 			id: sId.id
 			name: sName
+		mediator.publish 'save-bracket'
 
 	saveTime: (ev)=>
 		@model.event().set 'starts_at', $(ev.currentTarget).val()
 		@model.event().set 'ends_at', moment($(ev.currentTarget).val(), "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")
+		mediator.publish 'save-bracket'
