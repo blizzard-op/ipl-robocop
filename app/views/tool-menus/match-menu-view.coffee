@@ -47,7 +47,7 @@ module.exports = class MatchMenuView extends View
 		@$el.html @template( options )
 		teamList = for team in @bracket.get('teams').models when team?
 			team.get 'name'
-		teamList.unshift('')
+		teamList.unshift('TBD')
 
 		for teamName in teamList
 			$('<option></option>').appendTo(@.$('.team-list')).text teamName
