@@ -9,8 +9,9 @@ module.exports = class MatchView extends View
 	initialize:->
 		super
 		@model.on 'change:transform2d', @updatePosition
-		@listenTo @model.get('event').get('matchup'), 'change:teams', ()=>
+		@listenTo @model.matchup(), 'change:teams', ()=>
 			@changeTeams()
+		@changeTeams()
 
 	render:->
 		super
@@ -27,7 +28,7 @@ module.exports = class MatchView extends View
 		@stopListening()
 		@listenTo @model.get('event').get('matchup'), 'change:teams', ()=>
 			@changeTeams()
-		for team in @model.teams()
+		for team in @model.teams() when team?
 			@listenTo team, 'change', ()=>
 				@render()
 		@render()
