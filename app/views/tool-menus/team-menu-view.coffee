@@ -36,13 +36,14 @@ module.exports = class TeamMenuView extends View
 			name: a.get('name')
 
 		@$el.html @template( { teams: teamObs })
-
-		@teams.each (team)=>
-			@.$('li').eq( team.get('seed')-1 ).data 'team', team
-		@.$('#team-sort-list').sortable
-			update: @sortUpdate
-		@.$('input.team-input').typeahead
-			source: @teamlist
+		if @model?
+			@.$('#enable-seeding').prop('checked', @model.get('enabled'))
+			@teams.each (team)=>
+				@.$('li').eq( team.get('seed')-1 ).data 'team', team
+			@.$('#team-sort-list').sortable
+				update: @sortUpdate
+			@.$('input.team-input').typeahead
+				source: @teamlist
 		@
 
 	sortUpdate: (e, ui)=>
@@ -60,6 +61,7 @@ module.exports = class TeamMenuView extends View
 		team.set 'name', $(ev.currentTarget).val()
 		team.set 'id', @idLookup[$(ev.currentTarget).val()]
 		@.$('li').removeClass('edit')
+		@model.retitleSeeds()
 		false
 
 	# enterKey: (ev)->

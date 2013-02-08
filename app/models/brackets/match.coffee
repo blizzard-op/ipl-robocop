@@ -41,11 +41,13 @@ module.exports = class Match extends Model
 		parent = @get 'parent'
 		if parent?
 			parent.team(parent.whichSlot(@), new MatchTeam(team.attributes))
+			parent.event().autoTitle()
 		loserMatch = @get 'loserDropsTo'
 		if loserMatch?
 			# console.log loserMatch.slot
 			loser = if @teams()[0].get('name') is team.get('name') then @teams()[1] else @teams()[0]
 			loserMatch.match.team(loserMatch.slot, new MatchTeam(loser.attributes))
+			loserMatch.match.event().autoTitle()
 
 	whichSlot: (childMatch)->
 		unless _.contains(@get('children'), childMatch)

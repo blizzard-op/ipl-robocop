@@ -6,7 +6,7 @@ module.exports = class MatchMutator extends Match
 		@on 'change', @showChanges
 		@selected = []
 		# attributes to ignore
-		@ignore = ["transform2d","parent","children"]
+		@ignore = ["transform2d","parent","children","loserDropsTo","hasLoserSlot"]
 
 	advance: (team)=>
 		_.first(@selected).advance team
