@@ -19,6 +19,7 @@ module.exports = class MatchMenuView extends View
 		'change .stream-list' : (ev)-> @saveStream(ev)
 		'change #match-title' : (ev)-> @saveTitle(ev)
 		'change #start-time' : (ev)-> @saveTime(ev)
+		'change #group-select' : (ev)-> @saveGroups(ev)
 		'click .team-btn' : (ev)-> @endGame(ev)
 
 	initialize:(options)->
@@ -117,15 +118,15 @@ module.exports = class MatchMenuView extends View
 		@render()
 
 	renderGroups: (ev)->
-		# console.log @model.event().get 'groups'
-		# toSelect =
 		for group in @groups
-			cSelect = $('<option></option>').appendTo(@.$('#group-select')).text group.name
-			# console.log _.findWhere @model.groups, {slug: group.slug}
-
+			$cSelect = $('<option></option>').appendTo(@.$('#group-select')).text group.name
+			hasGroup = _.findWhere @model.event().get('groups'), {slug: group.slug}
+			if hasGroup?
+				$cSelect.prop("selected", "selected")
 
 	saveGroups: (ev)->
-		true
+		selectedGroups = $(ev.currentTarget).val()
+		@model.event().set 'groups', _.filter(@groups, (group)-> _.find(selectedGroups, (name)-> name is group.name))
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()
