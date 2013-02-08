@@ -106,7 +106,6 @@ module.exports = class MatchMenuView extends View
 		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
-		$('<option></option>').appendTo(@.$(elName))
 		for element in list
 			op = $('<option></option>').appendTo(@.$(elName)).text element.get('name')
 			if op.text() is defaultVal
