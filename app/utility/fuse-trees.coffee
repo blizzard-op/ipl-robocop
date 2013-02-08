@@ -5,7 +5,7 @@ module.exports = class FuseTree
 	@fuse: (leftRoot, rightRoot)->
 		newHead = new Match
 			children: [leftRoot, rightRoot]
-		newHead.teams([new MatchTeam({name:'',seed:1}), new MatchTeam({name:'', seed:2})])
+		newHead.teams([new MatchTeam({seed:1}), new MatchTeam({seed:2})])
 		leftRoot.set 'parent', newHead
 		rightRoot.set 'parent', newHead
 		newHead
