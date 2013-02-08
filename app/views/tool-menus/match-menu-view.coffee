@@ -14,11 +14,11 @@ module.exports = class MatchMenuView extends View
 	className: "admin-menu"
 	events:
 		'click #start-game-btn' : ()-> @startGame()
+		'click #reset-match-btn' : ()-> @resetMatchup()
 		'change .team-list' : (ev)-> @saveTeam(ev)
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
 		'change .stream-list' : (ev)-> @saveStream(ev)
 		'change #match-title' : (ev)-> @saveTitle(ev)
-		'change #start-time' : (ev)-> @saveTime(ev)
 		'change #group-select' : (ev)-> @saveGroups(ev)
 		'click .team-btn' : (ev)-> @endGame(ev)
 
@@ -47,7 +47,7 @@ module.exports = class MatchMenuView extends View
 		@$el.html @template( options )
 		teamList = for team in @bracket.get('teams').models when team?
 			team.get 'name'
-		teamList.unshift('')
+		teamList.unshift('TBD')
 
 		for teamName in teamList
 			$('<option></option>').appendTo(@.$('.team-list')).text teamName
@@ -67,12 +67,16 @@ module.exports = class MatchMenuView extends View
 			timezone: "-0800"
 			hourGrid: 4
 			minuteGrid: 10
+			onSelect: (dt, dpi)=>
+				@saveTime(dt)
 
 		@renderGroups()
 
 		if @model.games().first().get('status') isnt 'ready'
 			@renderGames()
 			@.$('#start-game-btn').hide()
+		else
+			@.$('#reset-match-btn').hide()
 
 		@
 
@@ -81,8 +85,13 @@ module.exports = class MatchMenuView extends View
 			new GameSubView({model:game}).setMatchup(@model.matchup()).render()
 		false
 
+	resetMatchup: ()=>
+		_.first(@model.selected).matchup().reset()
+		@render()
+		false
+
 	startGame: ()=>
-		@model.games().first().set 'status', 'in progress'
+		@model.games().first().set 'status', 'active'
 		@render()
 		false
 
@@ -97,7 +106,6 @@ module.exports = class MatchMenuView extends View
 		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
-		$('<option></option>').appendTo(@.$(elName))
 		for element in list
 			op = $('<option></option>').appendTo(@.$(elName)).text element.get('name')
 			if op.text() is defaultVal
@@ -150,7 +158,7 @@ module.exports = class MatchMenuView extends View
 			name: sName
 		mediator.publish 'save-bracket'
 
-	saveTime: (ev)=>
-		@model.event().set 'starts_at', $(ev.currentTarget).val()
-		@model.event().set 'ends_at', moment($(ev.currentTarget).val(), "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")
+	saveTime: (time)=>
+		@model.event().set 'starts_at', time
+		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")
 		mediator.publish 'save-bracket'

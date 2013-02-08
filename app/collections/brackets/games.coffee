@@ -7,10 +7,10 @@ module.exports = class Games extends Collection
 	comparator: (game)-> game.get 'number'
 
 	next: (winner=null)=>
-		firstInProgress = @find (game)-> game.get('status') is 'in progress'
+		firstInProgress = @find (game)-> game.get('status') is 'active'
 		firstReady = @find (game)-> game.get('status') is 'ready'
 		firstInProgress?.set 'status', 'finished'
-		firstReady?.set 'status', 'in progress'
+		firstReady?.set 'status', 'active'
 		if winner?
 			firstInProgress.set 'winner', _.pick(winner.attributes, 'id', 'name')
 
