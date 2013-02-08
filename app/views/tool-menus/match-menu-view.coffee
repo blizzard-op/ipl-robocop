@@ -4,6 +4,7 @@ Matches = require 'collections/brackets/matches'
 mediator = require 'mediator'
 Streams = require 'collections/brackets/streams'
 GameSubView = require 'views/game-sub-view'
+MatchTeam = require 'models/brackets/match-team'
 
 module.exports = class MatchMenuView extends View
 	autoRender: true
@@ -66,6 +67,8 @@ module.exports = class MatchMenuView extends View
 			hourGrid: 4
 			minuteGrid: 10
 
+		@renderGroups()
+
 		if @model.games().first().get('status') isnt 'ready'
 			@renderGames()
 			@.$('#start-game-btn').hide()
@@ -101,12 +104,28 @@ module.exports = class MatchMenuView extends View
 
 	saveTeam:(ev)->
 		teams = _.clone(@model.teams())
-		teams[parseInt($(ev.currentTarget).attr('slot'))] = @bracket.get('teams').where({name: $(ev.currentTarget).val()})[0]
+		newName = if $(ev.currentTarget).val() is '' then 'TBD' else $(ev.currentTarget).val()
+		teams[parseInt($(ev.currentTarget).attr('slot'))] = @bracket.get('teams').where({name: newName})[0]
+		_.each teams, (team, i)=>
+			unless team?
+				teams[i] = new MatchTeam()
 		@model.teams(teams)
+
 		teamNames = _.map teams, (team)=> team.get 'name'
 		@model.event().set 'title', teamNames.join(" vs. ")
 		mediator.publish 'save-bracket'
 		@render()
+
+	renderGroups: (ev)->
+		# console.log @model.event().get 'groups'
+		# toSelect =
+		for group in @groups
+			cSelect = $('<option></option>').appendTo(@.$('#group-select')).text group.name
+			# console.log _.findWhere @model.groups, {slug: group.slug}
+
+
+	saveGroups: (ev)->
+		true
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()

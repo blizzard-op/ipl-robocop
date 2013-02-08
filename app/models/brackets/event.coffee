@@ -9,7 +9,12 @@ module.exports = class Event extends Model
 		ends_at: moment().add('days', 10).add('hours', 1).format("MM-DD-YYYYTHH:mm:ssZ")
 		rebroadcast: false
 		matchup: new Matchup()
-		groups: []
+		groups: [{
+			"id": "5100451909f67b42a8000002",
+			"name": "StarCraft II",
+			"slug": "starcraft-2",
+			"image_url": "http://media.ign.com/ev/esports/ipl-static/shared/images/logos/franchises/starcraft-2.png"
+		}]
 
 	toJSON:=>
 		attr = _.clone(@attributes)
