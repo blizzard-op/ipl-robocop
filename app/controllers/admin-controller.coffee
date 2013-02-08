@@ -13,7 +13,12 @@ module.exports = class AdminsController extends Controller
 	editBracket: (routeVars) ->
 		@bracket = new Bracket()
 		@bracketLoaded()
-	bracketLoaded: ->
+		@bracket.fetch
+			url: "http://test.ign.com:2121/brackets/v6/api/"+routeVars.slug
+			success: (data)=>
+				@bracketView.render()
+
+	bracketLoaded: ()->
 		@tools = new Tools()
 		@workspaceView = new AdminWorkspaceView
 			collection: @tools

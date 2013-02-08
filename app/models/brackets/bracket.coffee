@@ -15,6 +15,14 @@ module.exports = class Bracket extends Model
 		groups: new GroupStages()
 		teams: new Teams()
 
+	initialize:(options)->
+		super options
+
 	parse:(data)=>
-		super data
-		console.log @get 'matches'
+		@get('teams').update(data.teams)
+		data.teams = @get('teams')
+		matches = @get('matches')
+		matches.update(data.matches, {parse:true})
+		data.groups = @get 'groups'
+		data.matches = matches
+		data
