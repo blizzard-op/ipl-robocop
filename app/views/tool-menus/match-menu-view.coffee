@@ -14,6 +14,7 @@ module.exports = class MatchMenuView extends View
 	className: "admin-menu"
 	events:
 		'click #start-game-btn' : ()-> @startGame()
+		'click #reset-match-btn' : ()-> @resetMatchup()
 		'change .team-list' : (ev)-> @saveTeam(ev)
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
 		'change .stream-list' : (ev)-> @saveStream(ev)
@@ -73,12 +74,19 @@ module.exports = class MatchMenuView extends View
 		if @model.games().first().get('status') isnt 'ready'
 			@renderGames()
 			@.$('#start-game-btn').hide()
+		else
+			@.$('#reset-match-btn').hide()
 
 		@
 
 	renderGames: ()=>
 		@gameViews = @model.games().map (game)=>
 			new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+		false
+
+	resetMatchup: ()=>
+		_.first(@model.selected).matchup().reset()
+		@render()
 		false
 
 	startGame: ()=>
