@@ -82,7 +82,7 @@ module.exports = class MatchMenuView extends View
 		false
 
 	startGame: ()=>
-		@model.games().first().set 'status', 'in progress'
+		@model.games().first().set 'status', 'active'
 		@render()
 		false
 
