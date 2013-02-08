@@ -19,7 +19,6 @@ module.exports = class MatchMenuView extends View
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
 		'change .stream-list' : (ev)-> @saveStream(ev)
 		'change #match-title' : (ev)-> @saveTitle(ev)
-		'change #start-time' : (ev)-> @saveTime(ev)
 		'change #group-select' : (ev)-> @saveGroups(ev)
 		'click .team-btn' : (ev)-> @endGame(ev)
 
@@ -68,6 +67,8 @@ module.exports = class MatchMenuView extends View
 			timezone: "-0800"
 			hourGrid: 4
 			minuteGrid: 10
+			onSelect: (dt, dpi)=>
+				@saveTime(dt)
 
 		@renderGroups()
 
@@ -158,7 +159,7 @@ module.exports = class MatchMenuView extends View
 			name: sName
 		mediator.publish 'save-bracket'
 
-	saveTime: (ev)=>
-		@model.event().set 'starts_at', $(ev.currentTarget).val()
-		@model.event().set 'ends_at', moment($(ev.currentTarget).val(), "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")
+	saveTime: (time)=>
+		@model.event().set 'starts_at', time
+		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")
 		mediator.publish 'save-bracket'
