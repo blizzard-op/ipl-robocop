@@ -4,9 +4,9 @@ Matchup = require 'models/brackets/matchup'
 module.exports = class Event extends Model
 	defaults: ()->
 		title: "TBD vs. TBD"
-		stream: {name: "SC2 1", id:"5088c239f767afac6e000001"}
+		stream: null
 		starts_at: moment().add('days', 10).format("MM/DD/YYYY hh:mm aZ")
-		ends_at: moment().add('days', 10).add('hours', 1).format("MM-DD-YYYYTHH:mm:ssZ")
+		ends_at: moment().add('days', 10).add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
 		rebroadcast: false
 		matchup: new Matchup()
 		groups: [{
@@ -16,14 +16,18 @@ module.exports = class Event extends Model
 			"image_url": "http://media.ign.com/ev/esports/ipl-static/shared/images/logos/franchises/starcraft-2.png"
 		}]
 
+	initialize:(options)->
+		super(options)
+		@urlRoot = ()-> "http://esports.ign.com/content/v2/events"
+
 	toJSON:=>
 		attr = _.clone(@attributes)
-		attr.starts_at = moment(attr.starts_at, "MM/DD/YYYY hh:mm a").format("MM-DD-YYYYTHH:mm:ssZ")
+		attr.starts_at = moment(attr.starts_at, "MM/DD/YYYY hh:mm a").format("YYYY-MM-DDTHH:mm:ssZ")
 		attr
 
 	parse:(data)->
 		data.matchup = @get('matchup').parse(data.matchup)
-		data.starts_at = moment(data.starts_at, "MM-DD-YYYYTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
+		data.starts_at = moment(data.starts_at, "YYYY-MM-DDTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
 		@
 
 	autoTitle:=>
