@@ -22,7 +22,9 @@ module.exports = class BracketEditorView extends BracketView
 		@
 
 	saveBracket: ()=>
-		@model.save()
+		@model.save null,
+			xhrFields:
+				withCredentials: true
 
 	clickMatch: (ev)->
 		unless ev.shiftKey is true
