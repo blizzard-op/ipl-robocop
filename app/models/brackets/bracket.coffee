@@ -5,10 +5,11 @@ GroupStages = require 'collections/brackets/group-stages'
 
 module.exports = class Bracket extends Model
 	defaults: ()->
-		userId: null
+		users: []
 		sessionId: null
 		title: "Your Title"
-		slug: "some-slug"
+		date: moment().format("YYYY-MM-DDTHH:mm:ssZ")
+		slug: "default-slug"
 		kind: "ipl6"
 		labels: []
 		matches: new Matches()

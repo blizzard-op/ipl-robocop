@@ -20,7 +20,7 @@ module.exports = class GroupMenuView extends View
 			@changeMatches(ct.parents('li').data('group'), parseInt(ct.val()))
 			false
 	initialize: (options)->
-		super
+		super(options)
 		@bracket = options.bracket
 		@collection = @bracket.get 'groups'
 

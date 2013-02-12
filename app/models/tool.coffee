@@ -6,7 +6,7 @@ module.exports = class Tool extends Model
 		slug: "tool"
 		menu: null
 		logic: null
-	initialize:->
-		super
+	initialize:(options)->
+		super options
 		if @has('menu')
 			@get('menu').model = @get('logic')

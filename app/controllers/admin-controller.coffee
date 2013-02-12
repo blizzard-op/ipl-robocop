@@ -5,11 +5,13 @@ Tools = require 'collections/tools'
 Bracket = require 'models/brackets/bracket'
 BracketView = require 'views/bracket-editor-view'
 mediator = require 'mediator'
+OpenMenuView = require 'views/open-menu-view'
 
 module.exports = class AdminsController extends Controller
 	index: ->
 		@bracket = new Bracket()
 		@bracketLoaded()
+
 	editBracket: (routeVars) ->
 		@bracket = new Bracket()
 		@bracketLoaded()

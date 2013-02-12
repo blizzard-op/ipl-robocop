@@ -52,7 +52,7 @@ module.exports = class Match extends Model
 	whichSlot: (childMatch)->
 		unless _.contains(@get('children'), childMatch)
 			return 0
-		if @get 'hasLoserSlot'
+		if @get('hasLoserSlot') or @get('children').length is 1
 			return 1
 		_.indexOf(@get('children'), childMatch)
 
