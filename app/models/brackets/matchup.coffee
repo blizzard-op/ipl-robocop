@@ -39,3 +39,9 @@ module.exports = class Matchup extends Model
 				return {winner:team, matchDecided:true}
 			else
 				return {winner:team, matchDecided:false}
+
+	reset: =>
+		@get('games').each (game)->
+			game.unset 'winner'
+			game.set 'status', 'ready'
+		_.each @get('teams'), (team)-> team.set 'points', 0
