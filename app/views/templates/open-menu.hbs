@@ -1,3 +1,9 @@
 <h1>
 	Load a bracket
 </h1>
+
+<ul>
+	{{#each brackets}}
+		<li><a href="edit/{{this.slug}}">{{this.title}}</a></li>
+	{{/each}}
+</ul>
