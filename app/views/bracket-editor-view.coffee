@@ -30,15 +30,17 @@ module.exports = class BracketEditorView extends BracketView
 		$(ev.currentTarget).addClass 'activeSelect'
 		@selected.push $(ev.currentTarget).data('match')
 		mediator.publish 'change:selected', @selected
+		# console.log _.first(@selected).event().url()
+		# console.log JSON.stringify _.first(@selected).event().toJSON()
+		# _.first(@selected).event().save null,
+		# 	success: (model, resp, options)=>
+		# 		console.log "it worked", resp
+		# 	error: (model, xhr, options)=>
+		# 		console.log "oh no", model
 
 	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'
 		@selected = []
-
-		# Backbone.sync "create", @model,
-		# 	jsonpCallback: "jsonp"
-		# 	success: (data)-> console.log data
-		# 	error: (er, xr)-> console.log er, xr, "problem"
 	editTitle: (ev)=>
 		$(ev.currentTarget).addClass 'editing'
 		$(ev.currentTarget).find('input').focus().val @model.get('title')
@@ -50,4 +52,3 @@ module.exports = class BracketEditorView extends BracketView
 		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-')
 		@.$('.bracket-title h1').text newTitle
 		mediator.publish 'save-bracket'
-

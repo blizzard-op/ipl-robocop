@@ -106,6 +106,7 @@ module.exports = class MatchMenuView extends View
 		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
+		$('<option></option>').appendTo(@.$(elName))
 		for element in list
 			op = $('<option></option>').appendTo(@.$(elName)).text element.get('name')
 			if op.text() is defaultVal
@@ -153,12 +154,15 @@ module.exports = class MatchMenuView extends View
 	saveStream: (ev)=>
 		sName = $(ev.currentTarget).val()
 		sId = @streams.find (el)->el.get('name') is sName
-		@model.get('event').set 'stream',
-			id: sId.id
-			name: sName
+		if sId?
+			@model.get('event').set 'stream',
+				id: sId.id
+				name: sName
+		else
+			@model.get('event').set 'stream', null
 		mediator.publish 'save-bracket'
 
 	saveTime: (time)=>
 		@model.event().set 'starts_at', time
-		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("MM-DD-YYYYTHHss:mmZ")
+		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
 		mediator.publish 'save-bracket'
