@@ -20,6 +20,8 @@ module.exports = class AdminsController extends Controller
 			url: BracketUrls.apiBase + "/brackets/v6/api/"+routeVars.slug
 			success: (data)=>
 				@bracketView.render()
+			# error: (model, xhr)=>
+				# console.log xhr.status
 
 	bracketLoaded: ()->
 		options =

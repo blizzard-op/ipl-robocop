@@ -21,7 +21,7 @@ module.exports = class BracketView extends View
 		@listenTo @model.get('groups'), 'add', ()=>
 			@render()
 		Padding.match.width = 180
-		Padding.match.height = 60
+		Padding.match.height = 74
 		@padding = padding
 		@renderCount = 0
 
