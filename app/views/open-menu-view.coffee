@@ -1,6 +1,7 @@
 View = require 'views/base/view'
 template = require 'views/templates/open-menu'
 Collection = require 'models/base/collection'
+BracketUrls = require 'utility/brackets/bracket-urls'
 
 module.exports = class OpenMenuView extends View
 	template: template
@@ -12,7 +13,7 @@ module.exports = class OpenMenuView extends View
 		super options
 		@brackets = []
 		$.ajax
-			url: "http://test.ign.com:2121/brackets/v6/api/list/"
+			url: BracketUrls.apiBase+"/brackets/v6/api/list/"
 			success: (data)=>
 				@brackets = data
 				@render()

@@ -1,6 +1,7 @@
 View = require 'views/base/view'
 template = require 'views/templates/publish-menu'
 mediator = require 'mediator'
+BracketUrls = require 'utility/brackets/bracket-urls'
 
 module.exports = class PublishMenuView extends View
 	template: template
@@ -20,7 +21,7 @@ module.exports = class PublishMenuView extends View
 
 	publishShow: ()->
 		@toolbar.openMenu 'publish-menu'
-		@urls.directLink = "http://test.ign.com:3333/brackets/v6/view/" + @bracket.get 'slug'
+		@urls.directLink = BracketUrls.viewBase+"/brackets/v6/view/" + @bracket.get 'slug'
 		@render()
 
 	selectInput: (ev)=>
