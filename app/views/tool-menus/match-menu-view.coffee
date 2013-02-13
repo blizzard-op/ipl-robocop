@@ -5,6 +5,7 @@ mediator = require 'mediator'
 Streams = require 'collections/brackets/streams'
 GameSubView = require 'views/game-sub-view'
 MatchTeam = require 'models/brackets/match-team'
+MenuResizer = require 'utility/menu-resizer'
 
 module.exports = class MatchMenuView extends View
 	autoRender: true
@@ -78,6 +79,7 @@ module.exports = class MatchMenuView extends View
 		else
 			@.$('#reset-match-btn').hide()
 
+		MenuResizer.auto(@$el)
 		@
 
 	renderGames: ()=>
