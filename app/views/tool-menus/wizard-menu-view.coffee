@@ -20,9 +20,9 @@ module.exports = class WizardMenuView extends View
 		'submit': ()-> false
 
 	initialize: (options)->
+		super
 		@bracket = options.bracket
 		@doubleElimGen = new DoubleElim()
-		super
 
 	changePlayers:=>
 		@model.set 'numPlayers', parseInt @.$('#num-players').val()

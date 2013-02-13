@@ -14,7 +14,7 @@ module.exports = class BracketView extends View
 	id: 'bracket-layer'
 	autoRender: true
 	initialize: (options, padding={top: 200, right: 400, bottom: 200, left: 100})->
-		super
+		super(options)
 		@listenTo @model.get('matches'), 'reset', ()=>
 			@renderCount = 0
 			@render()

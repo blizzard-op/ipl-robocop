@@ -9,8 +9,8 @@ module.exports = class AdminToolbarView extends View
 	events:
 		"click .btn" : (ev)-> @openMenu( $(ev.currentTarget).attr('id') )
 
-	initialize:->
-		super
+	initialize:(options)->
+		super(options)
 		@$curMenu = null
 		@curSlug = ""
 
