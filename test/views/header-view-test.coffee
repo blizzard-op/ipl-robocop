@@ -15,5 +15,5 @@ describe 'HeaderView', ->
   afterEach ->
     @view.dispose()
 
-  it 'should display 2 links', ->
-    expect(@view.$el.find 'a').to.have.length 2
+  it 'should display 3 links', ->
+    expect(@view.$el.find 'a').to.have.length 3

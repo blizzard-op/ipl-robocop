@@ -50,5 +50,5 @@ module.exports = class BracketEditorView extends BracketView
 		newTitle = String($(ev.currentTarget).val().trim())
 		@model.set 'title', newTitle
 		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-')
-		@.$('.bracket-title h1').text newTitle
+		@.$('.bracket-title h1').text @model.get 'title'
 		mediator.publish 'save-bracket'

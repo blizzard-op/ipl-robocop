@@ -16,19 +16,19 @@ module.exports = class AdminWorkspaceView extends View
 	container: '#page-container'
 	template: template
 	initialize:(options)->
-		super
+		super(options)
 		@collection.add
 			label: "Wizard"
 			slug: "wizard-menu"
 			logic: new SingleElimWizard()
 			menu: new WizardMenuView({bracket:@model})
-			
+
 		@collection.add
 			label: "Teams"
 			slug: "teams-menu"
 			logic: new TeamAutoSeeder({bracket:@model})
 			menu: new TeamMenuView({bracket:@model})
-		
+
 		@collection.add
 			slug: "match-menu"
 			logic: new MatchMutator()
@@ -51,4 +51,10 @@ module.exports = class AdminWorkspaceView extends View
 		for i, a of @collection.models
 			@collection.models[i].get('menu').$el.appendTo(@.$('#menu-container')).hide()
 		@toolbar.openMenu( @collection.at(0).get('slug') )
+
 		@
+
+	dispose:()->
+		@collection.each (m)->
+			m
+		super

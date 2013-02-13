@@ -36,7 +36,7 @@ module.exports = class MatchMenuView extends View
 				@groups = data
 		@bracket = options.bracket
 
-	render:->
+	render:=>
 		super
 		unless @model?
 			return @
@@ -144,7 +144,7 @@ module.exports = class MatchMenuView extends View
 		@model.matchup().set 'best_of', parseInt @.$(ev.currentTarget).val()
 		mediator.publish 'save-bracket'
 
-	selectionChanged: (selected) ->
+	selectionChanged: (selected) =>
 		@toolbar.openMenu 'match-menu'
 		@model.selected = selected
 		@model.set _.clone(selected[0].attributes), {silent:true}
@@ -166,3 +166,4 @@ module.exports = class MatchMenuView extends View
 		@model.event().set 'starts_at', time
 		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
 		mediator.publish 'save-bracket'
+
