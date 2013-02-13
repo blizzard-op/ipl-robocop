@@ -1,5 +1,6 @@
 View = require 'views/base/view'
 template = require 'views/templates/header'
+mediator = require 'mediator'
 
 module.exports = class HeaderView extends View
 	autoRender: yes
@@ -9,7 +10,15 @@ module.exports = class HeaderView extends View
 	template: template
 
 	events:
-		"click a" : (ev)->
-			window.location = window.location.protocol + "//" + window.location.host + $(ev.currentTarget).attr('href')
-			false
+		"click .header-link" : (ev)-> @followLink(ev)
+		"click .publish-link" : (ev)-> @showPubMenu(ev)
+
+	showPubMenu: (ev)->
+		mediator.publish 'publish:clicked'
+		false
+
+	followLink: (ev)->
+		window.location = window.location.protocol + "//" + window.location.host + $(ev.currentTarget).attr('href')
+		false
+
 
