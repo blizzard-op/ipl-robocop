@@ -1,6 +1,7 @@
 View = require 'views/base/view'
 Collection = require 'models/base/collection'
 template = require 'views/templates/team-menu'
+MenuResizer = require 'utility/menu-resizer'
 
 module.exports = class TeamMenuView extends View
 	template: template
@@ -45,6 +46,8 @@ module.exports = class TeamMenuView extends View
 				update: @sortUpdate
 			@.$('input.team-input').typeahead
 				source: @teamlist
+
+		MenuResizer.auto(@$el)
 		@
 
 	sortUpdate: (e, ui)=>
