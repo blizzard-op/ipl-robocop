@@ -2,7 +2,7 @@ Model = require 'models/base/model'
 Matches = require 'collections/brackets/matches'
 Teams = require 'collections/brackets/teams'
 GroupStages = require 'collections/brackets/group-stages'
-RandomString = require 'utility/random-string'
+RandomString = require 'utility/brackets/random-string'
 
 module.exports = class Bracket extends Model
 	defaults: ()->

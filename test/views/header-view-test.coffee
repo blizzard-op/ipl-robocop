@@ -16,4 +16,4 @@ describe 'HeaderView', ->
     @view.dispose()
 
   it 'should display 3 links', ->
-    expect(@view.$el.find 'a').to.have.length 3
+    expect(@view.$el.find 'a').to.have.length 4

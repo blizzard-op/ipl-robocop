@@ -25,8 +25,7 @@ module.exports = class TeamMenuView extends View
 		@idLookup = {}
 		$.ajax
 			url: "http://esports.ign.com/content/v2/teams.json?per_page=1000"
-			jsonpCallback: "jsonp"
-			dataType: "jsonp"
+			cached:true
 			success: (data) =>
 				@teamlist = for a in data
 					@idLookup[a.name] = a.id

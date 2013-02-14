@@ -66,8 +66,8 @@ module.exports = class MatchMenuView extends View
 			timeFormat: "hh:mm ttz"
 			showTimezone: false
 			timezone: "-0800"
-			hourGrid: 4
-			minuteGrid: 10
+			hourGrid: 6
+			minuteGrid: 15
 			stepMinute: 15,
 			onSelect: (dt, dpi)=>
 				@saveTime(dt)

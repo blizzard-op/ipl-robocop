@@ -22,8 +22,9 @@ module.exports = class Matchup extends Model
 			else
 				matchTeams[i] = new MatchTeam(team)
 				matchTeams[i].set 'points', team.points
-		data.games = @get('games').update(data.games, {parse:true})
-		@
+		@get('games').update(data.games, {parse:true})
+		@set _.omit data, "teams", "games"
+		{}
 
 	updateGamesCount: ()=>
 		bestOf = @get 'best_of'
