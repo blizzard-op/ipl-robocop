@@ -21,7 +21,6 @@ module.exports = class Event extends Model
 		@urlRoot = ()-> "http://esports.ign.com/content/v2/events"
 
 	toJSON:=>
-		# debugger
 		attr = _.clone(@attributes)
 		attr.starts_at = moment(attr.starts_at, "MM/DD/YYYY hh:mm aZ").format("YYYY-MM-DDTHH:mm:ssZ")
 		attr
