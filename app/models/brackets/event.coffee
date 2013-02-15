@@ -29,8 +29,8 @@ module.exports = class Event extends Model
 	parse:(data)->
 		if data.success? and Boolean(data.success) is true
 			return {}
+		@set 'starts_at', moment(data.starts_at, "YYYY-MM-DDTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
 		@set _.omit data, "matchup", "starts_at"
-		@set 'starts_at', moment(@get 'starts_at', "YYYY-MM-DDTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
 		@get('matchup').parse(data.matchup)
 		{}
 

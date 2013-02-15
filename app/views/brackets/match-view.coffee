@@ -6,8 +6,8 @@ module.exports = class MatchView extends View
 	autoRender:true
 	className: 'match'
 
-	initialize:->
-		super
+	initialize:(options)->
+		super options
 		@model.on 'change:transform2d', @updatePosition
 		@listenTo @model.matchup(), 'change:teams', ()=>
 			@changeTeams()
@@ -26,7 +26,7 @@ module.exports = class MatchView extends View
 		@
 
 	formatTime: ()=>
-		console.log @model.event().get('starts_at')
+
 		moment(@model.event().get 'starts_at', "MM/DD/YYYY hh:mm a").format("MM.DD hh:mmA")
 
 	changeTeams:()=>
