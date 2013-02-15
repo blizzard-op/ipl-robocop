@@ -4,3 +4,4 @@ module.exports = class Team extends Model
 	defaults: ()->
 		name: "TBD"
 		image_url: ""
+		seed: 0

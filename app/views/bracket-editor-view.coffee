@@ -34,7 +34,6 @@ module.exports = class BracketEditorView extends BracketView
 		mediator.publish 'change:selected', @selected
 
 		# console.log JSON.stringify _.first(@selected).event().toJSON()
-		console.log _.first(@selected).event().get 'starts_at'
 		if moment(_.first(@selected).event().get('starts_at'), "MM/DD/YYYY hh:mm aZ").valueOf() < moment("Dec 25, 2008").valueOf()
 			_.first(@selected).event().save null,
 				success: (model, resp, options)=>

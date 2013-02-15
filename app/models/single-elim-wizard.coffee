@@ -2,6 +2,7 @@ Model = require 'models/base/model'
 Bracket = require 'models/brackets/bracket'
 Match = require 'models/brackets/match'
 MatchTeam = require 'models/brackets/match-team'
+Team = require 'models/brackets/team'
 
 module.exports = class SingleElimWizard extends Model
 	defaults:
@@ -34,7 +35,7 @@ module.exports = class SingleElimWizard extends Model
 	makeTeams: ()=>
 		teams = []
 		for i in [0...@get 'numPlayers']
-			teams[i] = new MatchTeam
+			teams[i] = new Team
 				seed: i + 1
 				name: (i + 1) + " TBD"
 				id: "tid"+i

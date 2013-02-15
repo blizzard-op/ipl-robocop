@@ -61,8 +61,11 @@ module.exports = class TeamMenuView extends View
 
 	saveTeamName: (ev)->
 		team = $(ev.currentTarget).parents('li').data 'team'
+		oldTeam = _.clone(team.attributes)
 		team.set 'name', $(ev.currentTarget).val()
 		team.set 'id', @idLookup[$(ev.currentTarget).val()]
+		@model.replaceTeam oldTeam, _.clone(team.attributes)
+
 		@.$('li').removeClass('edit')
 		@model.retitleSeeds()
 		false
