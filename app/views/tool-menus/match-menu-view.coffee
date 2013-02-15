@@ -96,12 +96,9 @@ module.exports = class MatchMenuView extends View
 		false
 
 	startGame: ()=>
-		@model.games().firstReady().start()
-		# @model.games().first().save null,
-		# 		success: (model, resp, options)=>
-		# 			console.log "it worked", resp
-		# 		error: (model, xhr, options)=>
-		# 			console.log "oh no", model
+		firstGame = @model.games().firstReady()
+		firstGame.start()
+		@saveGame(firstGame)
 		@render()
 		false
 
@@ -111,6 +108,7 @@ module.exports = class MatchMenuView extends View
 		if result.matchDecided
 			@model.games().each (game)=> game.set 'status', 'finished'
 			@model.advance(result.winner)
+			@saveGame @model.games().last()
 		@render()
 
 		mediator.publish 'save-bracket'
@@ -137,6 +135,8 @@ module.exports = class MatchMenuView extends View
 		# for sel in @selected
 		# 	sel.event().save()
 		# 	sel.matchup.save()
+		@saveEvents()
+		@saveMatchups()
 		mediator.publish 'save-bracket'
 		@render()
 
@@ -153,9 +153,11 @@ module.exports = class MatchMenuView extends View
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()
+		@saveEvents()
 
 	saveBestOf:(ev)->
 		@model.matchup().set 'best_of', parseInt @.$(ev.currentTarget).val()
+		@saveMatchups()
 		mediator.publish 'save-bracket'
 
 	selectionChanged: (selected) =>
@@ -174,16 +176,20 @@ module.exports = class MatchMenuView extends View
 				name: sName
 		else
 			@model.get('event').set 'stream', null
+		@saveEvents()
 		mediator.publish 'save-bracket'
 
 	saveTime: (time)=>
 		@model.event().set 'starts_at', time
 		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
+		@saveEvents()
 		mediator.publish 'save-bracket'
 
-	syncGame:(game)->
-		game.save()
+	saveEvents:()=>
+		mediator.publish 'save-events', _.map @model.selected, (match)-> match.event()
 
-	syncEvens: =>
-		for match in @selected
-			match.event().save()
+	saveMatchups: ()=>
+		mediator.publish 'save-matchups', _.map @model.selected, (match)-> match.matchup()
+
+	saveGame:(game)=>
+		mediator.publish 'save-game', game

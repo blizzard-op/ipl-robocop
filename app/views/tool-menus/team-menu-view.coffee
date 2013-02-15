@@ -53,6 +53,7 @@ module.exports = class TeamMenuView extends View
 		@.$('li').each ()->
 			$(@).data('team').set 'seed', $(@).index() + 1
 		@teams.sort()
+		mediator.publish 'save-bracket'
 
 	editTeam: (ev)=>
 		parent = $(ev.currentTarget).parents('li')
@@ -68,6 +69,7 @@ module.exports = class TeamMenuView extends View
 
 		@.$('li').removeClass('edit')
 		@model.retitleSeeds()
+		mediator.publish 'save-bracket'
 		false
 
 	# enterKey: (ev)->

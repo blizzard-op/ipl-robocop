@@ -9,6 +9,10 @@ module.exports = class BracketEditorView extends BracketView
 		super(options)
 		@model.url = ()-> BracketUrls.apiBase+"/brackets/v6/api/"
 		mediator.subscribe 'save-bracket', @saveBracket
+		mediator.subscribe 'save-events', @saveEvents
+		mediator.subscribe 'save-matchups', @saveMatchup
+		mediator.subscribe 'save-game', @saveGame
+
 		@delegate 'click', '.match', (ev)->@clickMatch(ev)
 		@delegate 'click', '.hotzone', ()-> @deselect()
 		@delegate 'click', '.bracket-title', (ev)->@editTitle(ev)
@@ -32,19 +36,8 @@ module.exports = class BracketEditorView extends BracketView
 		$(ev.currentTarget).addClass 'activeSelect'
 		@selected.push $(ev.currentTarget).data('match')
 		mediator.publish 'change:selected', @selected
-
-		# console.log JSON.stringify _.first(@selected).event().toJSON()
-		# if moment(_.first(@selected).event().get('starts_at'), "MM/DD/YYYY hh:mm aZ").valueOf() < moment("Dec 25, 2008").valueOf()
-		# 	_.first(@selected).event().save null,
-		# 		success: (model, resp, options)=>
-		# 			console.log "it worked", resp
-		# 		error: (model, xhr, options)=>
-		# 			console.log "oh no", model
-		# 	_.first(@selected).matchup().save null,
-		# 		success: (model, resp, options)=>
-		# 			console.log "it worked", resp
-		# 		error: (model, xhr, options)=>
-		# 			console.log "oh no", model
+		@saveEvents _.map @selected, (match)-> match.event()
+		@saveMatchups _.map @selected, (match)-> match.matchup()
 
 	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'
@@ -60,3 +53,20 @@ module.exports = class BracketEditorView extends BracketView
 		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-')
 		@.$('.bracket-title h1').text @model.get 'title'
 		mediator.publish 'save-bracket'
+
+	saveEvents:(events)->
+		if events?
+			for event in events
+				event.save null,
+					success: (model, resp, options)=>
+						console.log "it worked", resp
+					error: (model, xhr, options)=>
+						console.log "oh no", model
+
+	saveMatchups:(matchups)->
+		if matchups?
+			for matchup in matchups
+				matchup.save()
+
+	saveGame:(game)->
+		game.save()
