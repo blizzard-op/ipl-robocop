@@ -1,13 +1,13 @@
 View = require 'views/base/view'
 Collection = require 'models/base/collection'
 BracketView = require 'views/brackets/bracket-view'
-# Matches = require 'collections/brackets/matches'
+BracketUrls = require 'utility/brackets/bracket-urls'
 mediator = require 'mediator'
 
 module.exports = class BracketEditorView extends BracketView
 	initialize:(options)->
 		super(options)
-		@model.url = ()->"http://test.ign.com:2121/brackets/v6/api/"
+		@model.url = ()-> BracketUrls.apiBase+"/brackets/v6/api/"
 		mediator.subscribe 'save-bracket', @saveBracket
 		@delegate 'click', '.match', (ev)->@clickMatch(ev)
 		@delegate 'click', '.hotzone', ()-> @deselect()

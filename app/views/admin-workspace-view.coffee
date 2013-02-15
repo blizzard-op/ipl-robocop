@@ -9,6 +9,7 @@ MatchMenu = require 'views/tool-menus/match-menu-view'
 MatchMutator = require 'models/match-mutator'
 GroupMenu = require 'views/tool-menus/group-menu-view'
 GroupGenerator = require 'models/group-generator'
+PublishMenu = require 'views/tool-menus/publish-menu-view'
 
 module.exports = class AdminWorkspaceView extends View
 	autoRender: yes
@@ -39,6 +40,10 @@ module.exports = class AdminWorkspaceView extends View
 			slug: "groups-menu"
 			logic: new GroupGenerator()
 			menu: new GroupMenu({bracket:@model})
+
+		@collection.add
+			slug: "publish-menu"
+			menu: new PublishMenu({bracket:@model})
 
 		@toolbar = new AdminToolbarView({collection: @collection})
 		# make sure each tool has access to the toolbar
