@@ -26,6 +26,7 @@ module.exports = class MatchView extends View
 		@
 
 	formatTime: ()=>
+		console.log @model.event().get('starts_at')
 		moment(@model.event().get 'starts_at', "MM/DD/YYYY hh:mm a").format("MM.DD hh:mmA")
 
 	changeTeams:()=>

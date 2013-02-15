@@ -21,11 +21,9 @@ module.exports = class Bracket extends Model
 		super options
 
 	parse:(data)=>
-		@get('teams').update(data.teams)
+		@set _.omit data, "teams", "groups", "matches"
+		@get('teams').update(data.teams, {parse:true})
 		@get('teams').trigger 'sync'
-		data.teams = @get('teams')
-		matches = @get('matches')
-		matches.update(data.matches, {parse:true})
-		data.groups = @get 'groups'
-		data.matches = matches
-		data
+		@get('matches').update(data.matches, {parse:true})
+		@get 'groups'
+		{}

@@ -34,13 +34,18 @@ module.exports = class BracketEditorView extends BracketView
 		mediator.publish 'change:selected', @selected
 
 		# console.log JSON.stringify _.first(@selected).event().toJSON()
-		# if moment(_.first(@selected).event().get('starts_at'), "MM/DD/YYYY hh:mm aZ").valueOf() < moment("Dec 25, 2008").valueOf()
-		# 	_.first(@selected).event().save null,
-		# 		success: (model, resp, options)=>
-		# 			console.log "click!"
-		# 			console.log "it worked", resp
-		# 		error: (model, xhr, options)=>
-		# 			console.log "oh no", model
+		console.log _.first(@selected).event().get 'starts_at'
+		if moment(_.first(@selected).event().get('starts_at'), "MM/DD/YYYY hh:mm aZ").valueOf() < moment("Dec 25, 2008").valueOf()
+			_.first(@selected).event().save null,
+				success: (model, resp, options)=>
+					console.log "it worked", resp
+				error: (model, xhr, options)=>
+					console.log "oh no", model
+			_.first(@selected).matchup().save null,
+				success: (model, resp, options)=>
+					console.log "it worked", resp
+				error: (model, xhr, options)=>
+					console.log "oh no", model
 
 	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'

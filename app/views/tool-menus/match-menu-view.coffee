@@ -94,7 +94,7 @@ module.exports = class MatchMenuView extends View
 		false
 
 	startGame: ()=>
-		@model.games().first().set 'status', 'active'
+		@model.games().first().set 'status', 'underway'
 		@render()
 		false
 
@@ -126,6 +126,9 @@ module.exports = class MatchMenuView extends View
 
 		teamNames = _.map teams, (team)=> team.get 'name'
 		@model.event().set 'title', teamNames.join(" vs. ")
+		# for sel in @selected
+		# 	sel.event().save()
+		# 	sel.matchup.save()
 		mediator.publish 'save-bracket'
 		@render()
 

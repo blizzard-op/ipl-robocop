@@ -23,9 +23,12 @@ module.exports = class Event extends Model
 	toJSON:=>
 		attr = _.clone(@attributes)
 		attr.starts_at = moment(attr.starts_at, "MM/DD/YYYY hh:mm aZ").format("YYYY-MM-DDTHH:mm:ssZ")
+		console.log attr.starts_at
 		attr
 
 	parse:(data)->
+		if data.success? and Boolean(data.success) is true
+			return {}
 		@set _.omit data, "matchup", "starts_at"
 		@set 'starts_at', moment(@get 'starts_at', "YYYY-MM-DDTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
 		@get('matchup').parse(data.matchup)

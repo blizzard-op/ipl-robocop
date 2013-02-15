@@ -13,6 +13,7 @@ module.exports = class TeamAutoSeeder extends Model
 		@set 'bracket', options.bracket
 		@get('bracket').get('teams').comparator = (team)-> team.get 'seed'
 		@listenTo @get('bracket').get('matches'), 'reset', ()-> @updateSeedMatches()
+		@listenTo @get('bracket'), 'sync', ()-> @updateSeedMatches()
 		@listenTo @get('bracket').get('teams'), 'sort', ()-> @updateTeams()
 		@listenTo @get('bracket').get('teams'), 'reset', ()-> @updateTeams()
 		mediator.subscribe 'groupAdded', ()-> true

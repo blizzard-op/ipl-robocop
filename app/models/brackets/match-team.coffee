@@ -14,6 +14,6 @@ module.exports = class MatchTeam extends Model
 	toJSON:=>
 		attrs = _.clone @attributes
 		# if this is a TBD team, give it the TBD team id
-		if attrs.id? and attrs.id.match(/^tid\d/)
+		if attrs.id? and attrs.id.match(/^tid\d/) or attrs.name is "TBD"
 			attrs.id = "5088cad2f767afae2e000005"
 		attrs

@@ -9,7 +9,9 @@ module.exports = class Game extends Model
 		@set 'winner',
 			id: team.id
 			name: team.get 'name'
+		@set 'ends_at', moment().format("YYYY-MM-DDTHH:mm:ssZ")
 		@set 'status', 'done'
 
 	start: ()->
-		@set 'status', 'active'
+		@set 'status', 'underway'
+		@set 'starts_at', moment().format("YYYY-MM-DDTHH:mm:ssZ")
