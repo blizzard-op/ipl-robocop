@@ -20,12 +20,19 @@ module.exports = class MatchView extends View
 			team.name = if a? and a.get('name') isnt 'TBD'  then a.get 'name' else ''
 			team.points = if a? and a.get('name') isnt 'TBD' then a.get 'points' else ''
 			team
-		@$el.html @template({teams: teamsObs})
+		matchTime = @formatTime()
+		@$el.html @template({teams: teamsObs, time: matchTime})
 		@updatePosition()
 		@
 
+	formatTime: ()=>
+		# console.log moment(@model.event().get 'starts_at', "MM/DD/YYYY hh:mm a").valueOf()
+		moment(@model.event().get 'starts_at', "MM/DD/YYYY hh:mm a").format("MM.DD hh:mmA")
+
 	changeTeams:()=>
 		@stopListening()
+		@listenTo @model.event(), 'change:starts_at', ()=>
+			@render()
 		@listenTo @model.get('event').get('matchup'), 'change:teams', ()=>
 			@changeTeams()
 		for team in @model.teams() when team?

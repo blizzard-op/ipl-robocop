@@ -11,10 +11,15 @@ module.exports = class HeaderView extends View
 
 	events:
 		"click .header-link" : (ev)-> @followLink(ev)
+		"click .save-link" : (ev)-> @saveBracket(ev)
 		"click .publish-link" : (ev)-> @showPubMenu(ev)
 
 	showPubMenu: (ev)->
 		mediator.publish 'publish:clicked'
+		false
+
+	saveBracket: (ev)->
+		mediator.publish 'save-bracket'
 		false
 
 	followLink: (ev)->
