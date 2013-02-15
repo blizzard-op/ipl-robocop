@@ -5,8 +5,8 @@ module.exports = class Event extends Model
 	defaults: ()->
 		title: "TBD vs. TBD"
 		stream: null
-		starts_at: moment().add('years', 1).format("MM/DD/YYYY hh:mm aZ")
-		ends_at: moment().add('years', 1).add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
+		starts_at: moment().subtract('years', 10).format("MM/DD/YYYY hh:mm aZ")
+		ends_at: moment().subtract('years', 10).add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
 		rebroadcast: false
 		matchup: new Matchup()
 		groups: [{
@@ -22,13 +22,16 @@ module.exports = class Event extends Model
 
 	toJSON:=>
 		attr = _.clone(@attributes)
-		attr.starts_at = moment(attr.starts_at, "MM/DD/YYYY hh:mm a").format("YYYY-MM-DDTHH:mm:ssZ")
+		attr.starts_at = moment(attr.starts_at, "MM/DD/YYYY hh:mm aZ").format("YYYY-MM-DDTHH:mm:ssZ")
 		attr
 
 	parse:(data)->
-		data.matchup = @get('matchup').parse(data.matchup)
-		data.starts_at = moment(data.starts_at, "YYYY-MM-DDTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
-		@
+		if data.success? and Boolean(data.success) is true
+			return {}
+		@set 'starts_at', moment(data.starts_at, "YYYY-MM-DDTHH:mm:ssZ").format("MM/DD/YYYY hh:mm aZ")
+		@set _.omit data, "matchup", "starts_at"
+		@get('matchup').parse(data.matchup)
+		{}
 
 	autoTitle:=>
 		teams= for i in [0...2]

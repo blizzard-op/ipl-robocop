@@ -19,8 +19,9 @@ module.exports = class Match extends Model
 		super options
 
 	parse:(data)->
-		data.event = @get('event').parse(data.event)
-		data
+		@get('event').parse(data.event)
+		@set _.omit data, "event"
+		{}
 
 	toJSON: =>
 		attr = _.clone(@attributes)
@@ -44,7 +45,6 @@ module.exports = class Match extends Model
 			parent.event().autoTitle()
 		loserMatch = @get 'loserDropsTo'
 		if loserMatch?
-			# console.log loserMatch.slot
 			loser = if @teams()[0].get('name') is team.get('name') then @teams()[1] else @teams()[0]
 			loserMatch.match.team(loserMatch.slot, new MatchTeam(loser.attributes))
 			loserMatch.match.event().autoTitle()

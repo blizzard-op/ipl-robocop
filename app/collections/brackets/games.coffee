@@ -7,12 +7,16 @@ module.exports = class Games extends Collection
 	comparator: (game)-> game.get 'number'
 
 	next: (winner=null)=>
-		firstInProgress = @find (game)-> game.get('status') is 'active'
+		firstInProgress = @find (game)-> game.get('status') is 'underway'
 		firstReady = @find (game)-> game.get('status') is 'ready'
-		firstInProgress?.set 'status', 'finished'
-		firstReady?.set 'status', 'active'
-		if winner?
-			firstInProgress.set 'winner', _.pick(winner.attributes, 'id', 'name')
+		# firstInProgress?.set 'status', 'finished'
+		# firstReady?.start()
+		if winner? and firstInProgress?
+			firstInProgress.endWithWinner _.pick(winner.attributes, 'id', 'name')
+			# firstInProgress.set 'winner', _.pick(winner.attributes, 'id', 'name')
+
+	firstReady: ()->
+		@find (game)-> game.get('status') is 'ready'
 
 	parse: (models)=>
 		updated = []

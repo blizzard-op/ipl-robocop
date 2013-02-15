@@ -14,7 +14,7 @@ module.exports = class MatchMenuView extends View
 	id: "match-menu"
 	className: "admin-menu"
 	events:
-		'click #start-game-btn' : ()-> @startGame()
+		'click button.start-game' : ()-> @startGame()
 		'click #reset-match-btn' : ()-> @resetMatchup()
 		'change .team-list' : (ev)-> @saveTeam(ev)
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
@@ -66,26 +66,28 @@ module.exports = class MatchMenuView extends View
 			timeFormat: "hh:mm ttz"
 			showTimezone: false
 			timezone: "-0800"
-			hourGrid: 4
-			minuteGrid: 10
+			hourGrid: 6
+			minuteGrid: 15
 			stepMinute: 15,
 			onSelect: (dt, dpi)=>
 				@saveTime(dt)
 
 		@renderGroups()
-
-		if @model.games().first().get('status') isnt 'ready'
-			@renderGames()
-			@.$('#start-game-btn').hide()
-		else
-			@.$('#reset-match-btn').hide()
+		@renderGames()
 
 		MenuResizer.auto(@$el)
 		@
 
 	renderGames: ()=>
+		startButtons = 0
+		underways = false
 		@gameViews = @model.games().map (game)=>
-			new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+			gv = new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+			if gv.model.get('status') is 'underway'
+				underways = true
+			if gv.model.get('status') is 'ready' and startButtons++ > 0 or underways
+				gv.$('.start-game').hide()
+			gv
 		false
 
 	resetMatchup: ()=>
@@ -94,7 +96,9 @@ module.exports = class MatchMenuView extends View
 		false
 
 	startGame: ()=>
-		@model.games().first().set 'status', 'active'
+		firstGame = @model.games().firstReady()
+		firstGame.start()
+		@saveGame(firstGame)
 		@render()
 		false
 
@@ -104,7 +108,9 @@ module.exports = class MatchMenuView extends View
 		if result.matchDecided
 			@model.games().each (game)=> game.set 'status', 'finished'
 			@model.advance(result.winner)
+			@saveGame @model.games().last()
 		@render()
+
 		mediator.publish 'save-bracket'
 		false
 
@@ -126,6 +132,11 @@ module.exports = class MatchMenuView extends View
 
 		teamNames = _.map teams, (team)=> team.get 'name'
 		@model.event().set 'title', teamNames.join(" vs. ")
+		# for sel in @selected
+		# 	sel.event().save()
+		# 	sel.matchup.save()
+		@saveEvents()
+		@saveMatchups()
 		mediator.publish 'save-bracket'
 		@render()
 
@@ -142,9 +153,11 @@ module.exports = class MatchMenuView extends View
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()
+		@saveEvents()
 
 	saveBestOf:(ev)->
 		@model.matchup().set 'best_of', parseInt @.$(ev.currentTarget).val()
+		@saveMatchups()
 		mediator.publish 'save-bracket'
 
 	selectionChanged: (selected) =>
@@ -163,10 +176,20 @@ module.exports = class MatchMenuView extends View
 				name: sName
 		else
 			@model.get('event').set 'stream', null
+		@saveEvents()
 		mediator.publish 'save-bracket'
 
 	saveTime: (time)=>
 		@model.event().set 'starts_at', time
 		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
+		@saveEvents()
 		mediator.publish 'save-bracket'
 
+	saveEvents:()=>
+		mediator.publish 'save-events', _.map @model.selected, (match)-> match.event()
+
+	saveMatchups: ()=>
+		mediator.publish 'save-matchups', _.map @model.selected, (match)-> match.matchup()
+
+	saveGame:(game)=>
+		mediator.publish 'save-game', game

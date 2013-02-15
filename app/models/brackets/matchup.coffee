@@ -11,19 +11,28 @@ module.exports = class Matchup extends Model
 
 	initialize:(options)->
 		super options
+		@urlRoot = ()-> "http://esports.ign.com/content/v2/matchups"
 		@updateGamesCount()
 		@on 'change:best_of', ()=> @updateGamesCount()
 
 	parse: (data)->
+		if data.success? and Boolean(data.success) is true
+			return {}
+		if data.teams? and data.teams.length < 2
+			data.teams.push {name:"TBD", points:0}
+
 		nTeams = for i, team of data.teams
 			matchTeams = @get 'teams'
 			if matchTeams[i]?
+				# if team.name is "TBD"
+				# 	team.name = matchTeams[i].get('seed') + " TBD"
 				matchTeams[i].set team
 			else
 				matchTeams[i] = new MatchTeam(team)
 				matchTeams[i].set 'points', team.points
-		data.games = @get('games').update(data.games, {parse:true})
-		@
+		@get('games').update(data.games, {parse:true})
+		@set _.omit data, "teams", "games"
+		{}
 
 	updateGamesCount: ()=>
 		bestOf = @get 'best_of'

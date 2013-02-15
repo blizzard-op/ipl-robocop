@@ -25,8 +25,7 @@ module.exports = class TeamMenuView extends View
 		@idLookup = {}
 		$.ajax
 			url: "http://esports.ign.com/content/v2/teams.json?per_page=1000"
-			jsonpCallback: "jsonp"
-			dataType: "jsonp"
+			cached:true
 			success: (data) =>
 				@teamlist = for a in data
 					@idLookup[a.name] = a.id
@@ -54,6 +53,7 @@ module.exports = class TeamMenuView extends View
 		@.$('li').each ()->
 			$(@).data('team').set 'seed', $(@).index() + 1
 		@teams.sort()
+		mediator.publish 'save-bracket'
 
 	editTeam: (ev)=>
 		parent = $(ev.currentTarget).parents('li')
@@ -62,10 +62,14 @@ module.exports = class TeamMenuView extends View
 
 	saveTeamName: (ev)->
 		team = $(ev.currentTarget).parents('li').data 'team'
+		oldTeam = _.clone(team.attributes)
 		team.set 'name', $(ev.currentTarget).val()
 		team.set 'id', @idLookup[$(ev.currentTarget).val()]
+		@model.replaceTeam oldTeam, _.clone(team.attributes)
+
 		@.$('li').removeClass('edit')
 		@model.retitleSeeds()
+		mediator.publish 'save-bracket'
 		false
 
 	# enterKey: (ev)->
