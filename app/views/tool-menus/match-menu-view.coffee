@@ -181,6 +181,9 @@ module.exports = class MatchMenuView extends View
 		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
 		mediator.publish 'save-bracket'
 
+	syncGame:(game)->
+		game.save()
+
 	syncEvens: =>
 		for match in @selected
 			match.event().save()
