@@ -21,6 +21,9 @@ module.exports = class AdminsController extends Controller
 				@bracketView.render()
 
 	bracketLoaded: ()->
+		options =
+			domain: ".ign.com"
+		$.cookies.set("robocopAuth", "yourmovecreep", options)
 		@tools = new Tools()
 		@workspaceView = new AdminWorkspaceView
 			collection: @tools
