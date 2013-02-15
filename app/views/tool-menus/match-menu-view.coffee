@@ -14,7 +14,7 @@ module.exports = class MatchMenuView extends View
 	id: "match-menu"
 	className: "admin-menu"
 	events:
-		'click #start-game-btn' : ()-> @startGame()
+		'click button.start-game' : ()-> @startGame()
 		'click #reset-match-btn' : ()-> @resetMatchup()
 		'change .team-list' : (ev)-> @saveTeam(ev)
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
@@ -73,19 +73,21 @@ module.exports = class MatchMenuView extends View
 				@saveTime(dt)
 
 		@renderGroups()
-
-		if @model.games().first().get('status') isnt 'ready'
-			@renderGames()
-			@.$('#start-game-btn').hide()
-		else
-			@.$('#reset-match-btn').hide()
+		@renderGames()
 
 		MenuResizer.auto(@$el)
 		@
 
 	renderGames: ()=>
+		startButtons = 0
+		underways = false
 		@gameViews = @model.games().map (game)=>
-			new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+			gv = new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+			if gv.model.get('status') is 'underway'
+				underways = true
+			if gv.model.get('status') is 'ready' and startButtons++ > 0 or underways
+				gv.$('.start-game').hide()
+			gv
 		false
 
 	resetMatchup: ()=>
@@ -94,7 +96,12 @@ module.exports = class MatchMenuView extends View
 		false
 
 	startGame: ()=>
-		@model.games().first().set 'status', 'underway'
+		@model.games().firstReady().start()
+		# @model.games().first().save null,
+		# 		success: (model, resp, options)=>
+		# 			console.log "it worked", resp
+		# 		error: (model, xhr, options)=>
+		# 			console.log "oh no", model
 		@render()
 		false
 
@@ -105,6 +112,7 @@ module.exports = class MatchMenuView extends View
 			@model.games().each (game)=> game.set 'status', 'finished'
 			@model.advance(result.winner)
 		@render()
+
 		mediator.publish 'save-bracket'
 		false
 
@@ -173,3 +181,6 @@ module.exports = class MatchMenuView extends View
 		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
 		mediator.publish 'save-bracket'
 
+	syncEvens: =>
+		for match in @selected
+			match.event().save()
