@@ -22,7 +22,8 @@ module.exports = class OpenMenuView extends View
 		super
 		options = {}
 		options.brackets = @brackets
-		for bracket in options.brackets
+
+		for bracket in options.brackets when bracket?
 			bracket.date = moment(bracket.date, "YYYY-MM-DDTHH:mm:ssZ").format("MM.DD.YYYY hh:mmA")
 		@$el.html @template(options)
 		@

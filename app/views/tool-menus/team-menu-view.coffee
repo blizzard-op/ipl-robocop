@@ -2,6 +2,7 @@ View = require 'views/base/view'
 Collection = require 'models/base/collection'
 template = require 'views/templates/team-menu'
 MenuResizer = require 'utility/menu-resizer'
+mediator = require 'mediator'
 
 module.exports = class TeamMenuView extends View
 	template: template

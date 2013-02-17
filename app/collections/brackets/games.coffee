@@ -13,6 +13,8 @@ module.exports = class Games extends Collection
 		# firstReady?.start()
 		if winner? and firstInProgress?
 			firstInProgress.endWithWinner _.pick(winner.attributes, 'id', 'name')
+			return firstInProgress
+
 			# firstInProgress.set 'winner', _.pick(winner.attributes, 'id', 'name')
 
 	firstReady: ()->

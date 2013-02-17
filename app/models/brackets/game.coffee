@@ -17,3 +17,9 @@ module.exports = class Game extends Model
 	start: ()=>
 		@set 'status', 'underway'
 		@set 'starts_at', moment().format("YYYY-MM-DDTHH:mm:ssZ")
+
+	parse: (data)=>
+		if data.success? and Boolean(data.success) is true
+			return {}
+		@set data
+		{}

@@ -98,6 +98,7 @@ module.exports = class MatchMenuView extends View
 	startGame: ()=>
 		firstGame = @model.games().firstReady()
 		firstGame.start()
+		console.log firstGame
 		@saveGame(firstGame)
 		@render()
 		false
@@ -108,7 +109,7 @@ module.exports = class MatchMenuView extends View
 		if result.matchDecided
 			@model.games().each (game)=> game.set 'status', 'finished'
 			@model.advance(result.winner)
-			@saveGame @model.games().last()
+			# @saveGame @model.games().last()
 		@render()
 
 		mediator.publish 'save-bracket'

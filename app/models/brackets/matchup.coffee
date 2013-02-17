@@ -18,8 +18,14 @@ module.exports = class Matchup extends Model
 	parse: (data)->
 		if data.success? and Boolean(data.success) is true
 			return {}
-		if data.teams? and data.teams.length < 2
-			data.teams.push {name:"TBD", points:0}
+		if data.teams?
+			if @get('teams').length > 1 and @get('teams')[0].id?
+				fti = @get('teams')[0].id
+				unless fti is data.teams[0].id
+					data.teams = data.teams.reverse()
+
+			if data.teams.length < 2
+				data.teams.push {name:"TBD", points:0}
 
 		nTeams = for i, team of data.teams
 			matchTeams = @get 'teams'

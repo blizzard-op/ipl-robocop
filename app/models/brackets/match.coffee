@@ -14,6 +14,7 @@ module.exports = class Match extends Model
 			y:0
 			paddingX:0
 			paddingY:0
+		teamOrder: []
 
 	initialize: (options)->
 		super options
