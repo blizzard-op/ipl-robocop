@@ -42,15 +42,18 @@ module.exports = class Match extends Model
 
 	advance: (team)=>
 		parent = @get 'parent'
+		touched = []
 		if parent?
 			parent.team(parent.whichSlot(@), new MatchTeam(team.attributes))
 			parent.event().autoTitle()
-
+			touched.push parent
 		loserMatch = @get 'loserDropsTo'
 		if loserMatch?
 			loser = if @teams()[0].get('name') is team.get('name') then @teams()[1] else @teams()[0]
 			loserMatch.match.team(loserMatch.slot, new MatchTeam(loser.attributes))
 			loserMatch.match.event().autoTitle()
+			touched.push loserMatch
+		touched
 
 	whichSlot: (childMatch)->
 		unless _.contains(@get('children'), childMatch)

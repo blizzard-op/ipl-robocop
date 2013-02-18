@@ -36,14 +36,22 @@ module.exports = class Viper
 		unless game.id?
 			match.save null,
 				success:(data)=>
-					game.save null,
-						success:(data)=>
-							if callback?
-								callback()
+					game.save null, @defSync(callback)
 				error:(data, xhr)=>
 					if callback?
 						callback()
 		else
 			game.save null, @defSync(callback)
 
+	@saveMatch: (match, callback=null)=>
+		match.event().save null,
+			success:(data)=>
+				match.matchup().save null, @defSync(callback)
+			error:(data, xhr)=>
+				if callback?
+					callback()
+
+	@saveMatches: (matches)=>
+		for match in matches when match?
+			@saveMatch match
 

@@ -114,7 +114,8 @@ module.exports = class MatchMenuView extends View
 		prevGame = @model.games().next(result.winner)
 		if result.matchDecided
 			@model.games().each (game)=> game.set 'status', 'finished'
-			@model.advance(result.winner)
+			toSave = @model.advance(result.winner)
+			Viper.saveMatches toSave
 		@render()
 		Viper.saveGame _.first(@model.selected).event(), prevGame
 		Mcclane.save()
@@ -139,8 +140,7 @@ module.exports = class MatchMenuView extends View
 
 		teamNames = _.map teams, (team)=> team.get 'name'
 		@model.event().set 'title', teamNames.join(" vs. ")
-		Viper.saveMatchups _.map @model.selected, (match)->match.event()
-		Viper.saveEvents _.map @model.selected, (match)-> if match.event().isNew() then null else match.event()
+		Viper.saveMatches @model.selected
 		Mcclane.save()
 
 		@render()
