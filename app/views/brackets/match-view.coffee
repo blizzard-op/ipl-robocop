@@ -26,8 +26,9 @@ module.exports = class MatchView extends View
 		@
 
 	formatTime: ()=>
+		matchTime = moment(@model.event().get 'starts_at', "MM/DD/YYYY hh:mm a")
+		if moment() > matchTime then "" else matchTime.format("MM.DD hh:mmA")
 
-		moment(@model.event().get 'starts_at', "MM/DD/YYYY hh:mm a").format("MM.DD hh:mmA")
 
 	changeTeams:()=>
 		@stopListening()

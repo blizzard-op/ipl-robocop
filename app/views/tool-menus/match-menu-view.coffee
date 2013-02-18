@@ -6,6 +6,8 @@ Streams = require 'collections/brackets/streams'
 GameSubView = require 'views/game-sub-view'
 MatchTeam = require 'models/brackets/match-team'
 MenuResizer = require 'utility/menu-resizer'
+Viper = require 'utility/viper'
+Mcclane = require 'utility/mcclane'
 
 module.exports = class MatchMenuView extends View
 	autoRender: true
@@ -62,6 +64,9 @@ module.exports = class MatchMenuView extends View
 
 		@fillSelect @streams.models, '.stream-list', @model?.get('event').get('stream')?.name
 
+		if _.first(@model.selected).started()
+			@.$('.team-list').prop('disabled', 'disabled')
+
 		@.$('#start-time').datetimepicker
 			timeFormat: "hh:mm ttz"
 			showTimezone: false
@@ -73,7 +78,8 @@ module.exports = class MatchMenuView extends View
 				@saveTime(dt)
 
 		@renderGroups()
-		@renderGames()
+		if _.first(@model.selected).noTBDs()
+			@renderGames()
 
 		MenuResizer.auto(@$el)
 		@
@@ -98,21 +104,20 @@ module.exports = class MatchMenuView extends View
 	startGame: ()=>
 		firstGame = @model.games().firstReady()
 		firstGame.start()
-		console.log firstGame
-		@saveGame(firstGame)
+		Viper.saveGame _.first(@model.selected).event(), firstGame
+		Mcclane.save()
 		@render()
 		false
 
 	endGame: (ev)=>
 		result = @model.matchup().pointFor @.$(ev.currentTarget).text()
-		@model.games().next(result.winner)
+		prevGame = @model.games().next(result.winner)
 		if result.matchDecided
 			@model.games().each (game)=> game.set 'status', 'finished'
 			@model.advance(result.winner)
-			# @saveGame @model.games().last()
 		@render()
-
-		mediator.publish 'save-bracket'
+		Viper.saveGame _.first(@model.selected).event(), prevGame
+		Mcclane.save()
 		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
@@ -126,6 +131,7 @@ module.exports = class MatchMenuView extends View
 		teams = _.clone(@model.teams())
 		newName = if $(ev.currentTarget).val() is '' then 'TBD' else $(ev.currentTarget).val()
 		teams[parseInt($(ev.currentTarget).attr('slot'))] = @bracket.get('teams').where({name: newName})[0]
+		console.log teams[parseInt($(ev.currentTarget).attr('slot'))]
 		_.each teams, (team, i)=>
 			unless team?
 				teams[i] = new MatchTeam()
@@ -133,12 +139,10 @@ module.exports = class MatchMenuView extends View
 
 		teamNames = _.map teams, (team)=> team.get 'name'
 		@model.event().set 'title', teamNames.join(" vs. ")
-		# for sel in @selected
-		# 	sel.event().save()
-		# 	sel.matchup.save()
-		@saveEvents()
-		@saveMatchups()
-		mediator.publish 'save-bracket'
+		Viper.saveMatchups _.map @model.selected, (match)->match.event()
+		Viper.saveEvents _.map @model.selected, (match)-> if match.event().isNew() then null else match.event()
+		Mcclane.save()
+
 		@render()
 
 	renderGroups: (ev)->
@@ -154,12 +158,13 @@ module.exports = class MatchMenuView extends View
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()
-		@saveEvents()
+		Viper.saveEvents _.map(@model.selected, (match)->match.event())
+		Mcclane.save()
 
 	saveBestOf:(ev)->
 		@model.matchup().set 'best_of', parseInt @.$(ev.currentTarget).val()
-		@saveMatchups()
-		mediator.publish 'save-bracket'
+		Viper.saveMatchups _.map(@model.selected, (match)->match.event())
+		Mcclane.save()
 
 	selectionChanged: (selected) =>
 		@toolbar.openMenu 'match-menu'
@@ -177,20 +182,11 @@ module.exports = class MatchMenuView extends View
 				name: sName
 		else
 			@model.get('event').set 'stream', null
-		@saveEvents()
-		mediator.publish 'save-bracket'
+		Viper.saveEvents _.map(@model.selected, (match)->match.event())
+		Mcclane.save()
 
 	saveTime: (time)=>
 		@model.event().set 'starts_at', time
 		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
-		@saveEvents()
-		mediator.publish 'save-bracket'
-
-	saveEvents:()=>
-		mediator.publish 'save-events', _.map @model.selected, (match)-> match.event()
-
-	saveMatchups: ()=>
-		mediator.publish 'save-matchups', _.map @model.selected, (match)-> match.matchup()
-
-	saveGame:(game)=>
-		mediator.publish 'save-game', game
+		Viper.saveEvents _.map(@model.selected, (match)->match.event())
+		Mcclane.save()

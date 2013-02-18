@@ -22,4 +22,6 @@ module.exports = class Game extends Model
 		if data.success? and Boolean(data.success) is true
 			return {}
 		@set data
+		if @get('status') is 'ready' and @get('starts_at')?
+			@set 'status', 'underway'
 		{}

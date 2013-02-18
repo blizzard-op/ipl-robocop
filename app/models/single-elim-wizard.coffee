@@ -7,7 +7,7 @@ Team = require 'models/brackets/team'
 module.exports = class SingleElimWizard extends Model
 	defaults:
 		matchBuffer: []
-		numPlayers: 16
+		numPlayers: 4
 		type: "single-elim"
 	# makes a list of seeded, linked matches
 	generate: ()=>

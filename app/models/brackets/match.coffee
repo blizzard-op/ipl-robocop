@@ -1,6 +1,7 @@
 Model = require 'models/base/model'
 Event = require 'models/brackets/event'
 MatchTeam = require 'models/brackets/match-team'
+Viper = require 'utility/viper'
 
 module.exports = class Match extends Model
 	defaults: ()->
@@ -44,6 +45,7 @@ module.exports = class Match extends Model
 		if parent?
 			parent.team(parent.whichSlot(@), new MatchTeam(team.attributes))
 			parent.event().autoTitle()
+
 		loserMatch = @get 'loserDropsTo'
 		if loserMatch?
 			loser = if @teams()[0].get('name') is team.get('name') then @teams()[1] else @teams()[0]
@@ -59,6 +61,14 @@ module.exports = class Match extends Model
 
 	isLoser: ()=>
 		if @get('hasLoserSlot') then true else false
+
+	noTBDs: ()=>
+		hasTBD = _.find @teams(), (team)=> team.get('name') is 'TBD' or team.get('name').match(/(\d) TBD/)?
+		return !hasTBD?
+
+	started: ()=>
+		firstStart = @games().find (game)-> game.get('starts_at')?
+		return firstStart?
 
 	# convenience getters
 

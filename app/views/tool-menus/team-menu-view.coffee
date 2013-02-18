@@ -3,6 +3,7 @@ Collection = require 'models/base/collection'
 template = require 'views/templates/team-menu'
 MenuResizer = require 'utility/menu-resizer'
 mediator = require 'mediator'
+Mcclane = require 'utility/mcclane'
 
 module.exports = class TeamMenuView extends View
 	template: template
@@ -54,7 +55,7 @@ module.exports = class TeamMenuView extends View
 		@.$('li').each ()->
 			$(@).data('team').set 'seed', $(@).index() + 1
 		@teams.sort()
-		mediator.publish 'save-bracket'
+		Mcclane.save()
 
 	editTeam: (ev)=>
 		parent = $(ev.currentTarget).parents('li')
@@ -70,7 +71,7 @@ module.exports = class TeamMenuView extends View
 
 		@.$('li').removeClass('edit')
 		@model.retitleSeeds()
-		mediator.publish 'save-bracket'
+		Mcclane.save()
 		false
 
 	# enterKey: (ev)->

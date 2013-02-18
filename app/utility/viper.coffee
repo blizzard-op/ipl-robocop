@@ -1,19 +1,28 @@
 module.exports = class Viper
-	@saveEvent: (match, callback=null)=>
-		match.save null,
+	@defSync: (callback) ->
+		if callback?
 			success:(data)=>
-				if callback?
-					callback()
+				callback()
 			error:(data, xhr)=>
-				if callback?
-					callback()
+				callback()
 
-	@saveMatchup: (match, callback=null)=>
+	@saveEvent: (match, callback=null)=>
+		match.save null, @defSync(callback)
+
+	@saveEvents: (events)=>
+		for event in events when event?
+			@saveEvent event
+
+	@saveMatchups: (events)=>
+		for event in events when event?
+			@saveMatchup event
+
+	@saveMatchup: (event, callback=null)=>
 		#have to save the parent event before we can save a matchup
-		unless match.get('matchup').id?
-			match.save null,
+		unless event.get('matchup').id?
+			event.save null,
 				success:(data)=>
-					match.get('matchup').save null,
+					event.get('matchup').save null,
 						success:(data)=>
 							if callback?
 								callback()
@@ -21,13 +30,7 @@ module.exports = class Viper
 					if callback?
 						callback()
 		else
-			match.get('matchup').save null,
-				success:(data)=>
-					if callback?
-						callback()
-				error:(data, xhr)=>
-					if callback?
-						callback()
+			event.get('matchup').save null, @defSync(callback)
 
 	@saveGame: (match, game, callback=null)=>
 		unless game.id?
@@ -41,10 +44,6 @@ module.exports = class Viper
 					if callback?
 						callback()
 		else
-			game.save null,
-				success:(data)=>
-					if callback?
-						callback()
-				error:(data, xhr)=>
-					if callback?
-						callback()
+			game.save null, @defSync(callback)
+
+
