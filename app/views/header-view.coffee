@@ -20,7 +20,6 @@ module.exports = class HeaderView extends View
 		false
 
 	saveBracket: (ev)->
-		console.log Mcclane.model
 		Mcclane.save()
 		false
 

@@ -21,7 +21,7 @@ module.exports = class Matchup extends Model
 		if data.teams?
 			if @get('teams').length > 1 and @get('teams')[0].id?
 				fti = @get('teams')[0].id
-				unless fti is data.teams[0].id
+				if fti isnt data.teams[0].id and not fti.match(/^tid\d/)
 					data.teams = data.teams.reverse()
 
 			if data.teams.length < 2
