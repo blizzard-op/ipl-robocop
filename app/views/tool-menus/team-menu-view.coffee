@@ -25,13 +25,7 @@ module.exports = class TeamMenuView extends View
 		@listenTo @teams, 'sync', @render
 		@listenTo @teams, 'change:name', @render
 		@idLookup = {}
-		$.ajax
-			url: "http://esports.ign.com/content/v2/teams.json?per_page=1000"
-			cached:true
-			success: (data) =>
-				@teamlist = for a in data
-					@idLookup[a.name] = a.id
-					a.name
+		@loadTeams()
 
 	render: ()->
 		super
@@ -47,6 +41,9 @@ module.exports = class TeamMenuView extends View
 				update: @sortUpdate
 			@.$('input.team-input').typeahead
 				source: @teamlist
+		@teams.each (team, index)=>
+			if team.id? and not @idLookup[team.get 'name']? and not team.get('name').match(/TBD$/)
+				$('<button class="btn btn-mini btn-warning add-team"><i class="icon-plus"></i></button>').appendTo @.$('li span.team-label').eq(index)
 
 		MenuResizer.auto(@$el)
 		@
@@ -65,14 +62,25 @@ module.exports = class TeamMenuView extends View
 	saveTeamName: (ev)->
 		team = $(ev.currentTarget).parents('li').data 'team'
 		oldTeam = _.clone(team.attributes)
-		team.set 'name', $(ev.currentTarget).val()
-		team.set 'id', @idLookup[$(ev.currentTarget).val()]
-		@model.replaceTeam oldTeam, _.clone(team.attributes)
 
+		if @idLookup[$(ev.currentTarget).val()]?
+			team.set 'id', @idLookup[$(ev.currentTarget).val()]
+		team.set 'name', $(ev.currentTarget).val().trim()
+		@model.replaceTeam oldTeam, _.clone(team.attributes)
 		@.$('li').removeClass('edit')
 		@model.retitleSeeds()
 		Mcclane.save()
 		false
+
+	loadTeams: ()=>
+		$.ajax
+			url: "http://esports.ign.com/content/v2/teams.json?per_page=1000"
+			cached:true
+			success: (data) =>
+				@teamlist = for a in data
+					@idLookup[a.name] = a.id
+					a.name
+			@render()
 
 	# enterKey: (ev)->
 		# if ev.keyCode is 13 and $(document.activeElement).hasClass 'team-input'
