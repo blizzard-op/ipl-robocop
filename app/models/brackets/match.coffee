@@ -52,7 +52,7 @@ module.exports = class Match extends Model
 			loser = if @teams()[0].get('name') is team.get('name') then @teams()[1] else @teams()[0]
 			loserMatch.match.team(loserMatch.slot, new MatchTeam(loser.attributes))
 			loserMatch.match.event().autoTitle()
-			touched.push loserMatch
+			touched.push loserMatch.match
 		touched
 
 	whichSlot: (childMatch)->
