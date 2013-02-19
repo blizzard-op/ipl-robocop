@@ -5,3 +5,7 @@ module.exports = class Team extends Model
 		name: "TBD"
 		image_url: ""
 		seed: 0
+
+	initialize: (options)->
+		super options
+		@urlRoot = ()-> "http://esports.ign.com/content/v2/teams"

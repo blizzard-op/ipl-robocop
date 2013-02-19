@@ -9,14 +9,14 @@ describe 'Save Matchup to Viper', ->
 		@firstTeamId = @testOb.matchup.teams[0].name
 		@model.set @model.parse(@testOb)
 
-	it 'should be be able to sync with Viper without first saving event', (done)->
-		Viper.saveMatchup(@model, done)
+	# it 'should be be able to sync with Viper without first saving event', (done)->
+	# 	Viper.saveMatchup(@model, done)
 
-	it 'should have an id after save',->
-		expect(@model.get('matchup').id).to.exist
+	# it 'should have an id after save',->
+	# 	expect(@model.get('matchup').id).to.exist
 
-	it 'should keep teams in the same order',->
-		expect(@model.get('matchup').get('teams')[0].get 'name').to.equal @firstTeamId
+	# it 'should keep teams in the same order',->
+	# 	expect(@model.get('matchup').get('teams')[0].get 'name').to.equal @firstTeamId
 
 	after (done)->
 		@model.destroy

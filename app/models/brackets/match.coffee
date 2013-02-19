@@ -1,7 +1,6 @@
 Model = require 'models/base/model'
 Event = require 'models/brackets/event'
 MatchTeam = require 'models/brackets/match-team'
-Viper = require 'utility/viper'
 
 module.exports = class Match extends Model
 	defaults: ()->
@@ -66,7 +65,8 @@ module.exports = class Match extends Model
 		if @get('hasLoserSlot') then true else false
 
 	noTBDs: ()=>
-		hasTBD = _.find @teams(), (team)=> team.get('name') is 'TBD' or team.get('name').match(/(\d) TBD/)?
+		hasTBD = _.find @teams(), (team)=>
+			team.get('name') is 'TBD' or team.get('name').match(/TBD$/)? or team.id is "5088cad2f767afae2e000005"
 		return !hasTBD?
 
 	started: ()=>

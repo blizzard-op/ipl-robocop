@@ -5,6 +5,7 @@ module.exports = class Game extends Model
 		number: 0
 		status: "ready"
 	initialize:(options)->
+		super options
 		@urlRoot = ()-> "http://esports.ign.com/content/v2/games"
 
 	endWithWinner: (team)=>

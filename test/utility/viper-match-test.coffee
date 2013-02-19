@@ -10,20 +10,20 @@ describe 'Save Match to Viper', ->
 		@testOb = JSON.parse(@testJSON)
 		@model.parse(@testOb)
 
-	it 'should have a Mcclane match id', ->
-		expect(@model.id).to.equal "mid1"
+	# it 'should have a Mcclane match id', ->
+	# 	expect(@model.id).to.equal "mid1"
 
-	it 'should be be able to sync with Viper', (done)->
-		Viper.saveMatch(@model, done)
+	# it 'should be be able to sync with Viper', (done)->
+	# 	Viper.saveMatch(@model, done)
 
-	it 'should save after changes', (done)->
-		mt = new MatchTeam({"id": "50b409392f098230d5000027","name": "Drewbie","image_url": "http://media.ign.com/ev/esports/ipl-static/shared/images/teams/drewbie.png","points": 0})
-		@model.team(1, mt)
-		@model.event().autoTitle()
-		Viper.saveMatch(@model, done)
+	# it 'should save after changes', (done)->
+	# 	mt = new MatchTeam({"id": "50b409392f098230d5000027","name": "Drewbie","image_url": "http://media.ign.com/ev/esports/ipl-static/shared/images/teams/drewbie.png","points": 0})
+	# 	@model.team(1, mt)
+	# 	@model.event().autoTitle()
+	# 	Viper.saveMatch(@model, done)
 
-	it 'should have updated the title after save', ->
-		expect(@model.event().get 'title').to.equal "Fnatic vs. Drewbie"
+	# it 'should have updated the title after save', ->
+	# 	expect(@model.event().get 'title').to.equal "Fnatic vs. Drewbie"
 
 	after (done)->
 		@model.event().destroy

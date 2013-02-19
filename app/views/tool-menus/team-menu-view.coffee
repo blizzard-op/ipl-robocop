@@ -4,6 +4,7 @@ template = require 'views/templates/team-menu'
 MenuResizer = require 'utility/menu-resizer'
 mediator = require 'mediator'
 Mcclane = require 'utility/mcclane'
+Viper = require 'utility/viper'
 
 module.exports = class TeamMenuView extends View
 	template: template
@@ -16,6 +17,7 @@ module.exports = class TeamMenuView extends View
 		'dblclick .team-label': (ev)-> @editTeam(ev)
 		'blur .team-edit-label input': (ev)-> @saveTeamName(ev)
 		'change #enable-seeding' : (ev)-> @model.set 'enabled', $(ev.currentTarget).prop('checked')
+		'click .add-team': (ev)-> @addTeam(ev)
 		# 'keypress': (ev)-> @enterKey(ev)
 	initialize: (options)->
 		super
@@ -71,6 +73,15 @@ module.exports = class TeamMenuView extends View
 		@model.retitleSeeds()
 		Mcclane.save()
 		false
+
+	addTeam: (ev)=>
+		newTeam = @.$(ev.currentTarget).parent().text().trim()
+		teamOb = $(ev.currentTarget).parents('li').data 'team'
+		delete teamOb.id
+		false
+
+	addTeamToLookup: ()=>
+
 
 	loadTeams: ()=>
 		$.ajax

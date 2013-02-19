@@ -55,3 +55,6 @@ module.exports = class Viper
 		for match in matches when match?
 			@saveMatch match
 
+	@saveTeam: (team, callback=null)=>
+		team.save null, @defSync(callback)
+

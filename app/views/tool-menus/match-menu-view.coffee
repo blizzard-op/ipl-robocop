@@ -77,7 +77,7 @@ module.exports = class MatchMenuView extends View
 			onSelect: (dt, dpi)=>
 				@saveTime(dt)
 
-		@renderGroups()
+		# @renderGroups()
 		if _.first(@model.selected).noTBDs()
 			@renderGames()
 
