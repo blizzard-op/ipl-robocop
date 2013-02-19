@@ -7,6 +7,7 @@ BracketView = require 'views/bracket-editor-view'
 mediator = require 'mediator'
 OpenMenuView = require 'views/open-menu-view'
 BracketUrls = require 'utility/brackets/bracket-urls'
+Mcclane = require 'utility/mcclane'
 
 module.exports = class AdminsController extends Controller
 	index: ->
@@ -28,6 +29,7 @@ module.exports = class AdminsController extends Controller
 			domain: ".ign.com"
 		$.cookies.set("robocopAuth", "yourmovecreep", options)
 		@tools = new Tools()
+		Mcclane.model = @bracket
 		@workspaceView = new AdminWorkspaceView
 			collection: @tools
 			model: @bracket

@@ -12,11 +12,11 @@ module.exports = class Matches extends Collection
 		for match in models
 			m = @get(match.id)
 			if m?
-				m.set _.omit m.parse(match), 'event'
+				m.parse(match)
 				updated.push m
 			else
 				newMatch = new Match()
-				newMatch.set newMatch.parse(match)
+				newMatch.parse(match)
 				updated.push newMatch
 		for j, match of updated
 			if updated[match.get 'parent']?

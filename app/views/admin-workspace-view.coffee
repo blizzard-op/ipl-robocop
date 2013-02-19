@@ -35,11 +35,11 @@ module.exports = class AdminWorkspaceView extends View
 			logic: new MatchMutator()
 			menu: new MatchMenu({bracket:@model})
 
-		@collection.add
-			label: "Groups"
-			slug: "groups-menu"
-			logic: new GroupGenerator()
-			menu: new GroupMenu({bracket:@model})
+		# @collection.add
+		# 	label: "Groups"
+		# 	slug: "groups-menu"
+		# 	logic: new GroupGenerator()
+		# 	menu: new GroupMenu({bracket:@model})
 
 		@collection.add
 			slug: "publish-menu"
@@ -58,8 +58,3 @@ module.exports = class AdminWorkspaceView extends View
 		@toolbar.openMenu( @collection.at(0).get('slug') )
 
 		@
-
-	dispose:()->
-		@collection.each (m)->
-			m
-		super

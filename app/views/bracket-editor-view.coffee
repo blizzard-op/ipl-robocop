@@ -3,12 +3,13 @@ Collection = require 'models/base/collection'
 BracketView = require 'views/brackets/bracket-view'
 BracketUrls = require 'utility/brackets/bracket-urls'
 mediator = require 'mediator'
+Mcclane = require 'utility/mcclane'
 
 module.exports = class BracketEditorView extends BracketView
 	initialize:(options)->
 		super(options)
 		@model.url = ()-> BracketUrls.apiBase+"/brackets/v6/api/"
-		mediator.subscribe 'save-bracket', @saveBracket
+
 		@delegate 'click', '.match', (ev)->@clickMatch(ev)
 		@delegate 'click', '.hotzone', ()-> @deselect()
 		@delegate 'click', '.bracket-title', (ev)->@editTitle(ev)
@@ -26,19 +27,12 @@ module.exports = class BracketEditorView extends BracketView
 			xhrFields:
 				withCredentials: true
 
-	clickMatch: (ev)->
+	clickMatch: (ev)=>
 		unless ev.shiftKey is true
 			@deselect()
 		$(ev.currentTarget).addClass 'activeSelect'
 		@selected.push $(ev.currentTarget).data('match')
 		mediator.publish 'change:selected', @selected
-		# console.log _.first(@selected).event().url()
-		# console.log JSON.stringify _.first(@selected).event().toJSON()
-		# _.first(@selected).event().save null,
-		# 	success: (model, resp, options)=>
-		# 		console.log "it worked", resp
-		# 	error: (model, xhr, options)=>
-		# 		console.log "oh no", model
 
 	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'
@@ -53,4 +47,4 @@ module.exports = class BracketEditorView extends BracketView
 		@model.set 'title', newTitle
 		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-')
 		@.$('.bracket-title h1').text @model.get 'title'
-		mediator.publish 'save-bracket'
+		Mcclane.save()
