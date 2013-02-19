@@ -1,6 +1,7 @@
 View = require 'views/base/view'
 template = require 'views/templates/header'
 mediator = require 'mediator'
+Mcclane = require 'utility/mcclane'
 
 module.exports = class HeaderView extends View
 	autoRender: yes
@@ -19,7 +20,7 @@ module.exports = class HeaderView extends View
 		false
 
 	saveBracket: (ev)->
-		mediator.publish 'save-bracket'
+		Mcclane.save()
 		false
 
 	followLink: (ev)->

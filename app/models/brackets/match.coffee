@@ -14,13 +14,15 @@ module.exports = class Match extends Model
 			y:0
 			paddingX:0
 			paddingY:0
+		teamOrder: []
 
 	initialize: (options)->
 		super options
 
 	parse:(data)->
-		data.event = @get('event').parse(data.event)
-		data
+		@get('event').parse(data.event)
+		@set _.omit data, "event"
+		{}
 
 	toJSON: =>
 		attr = _.clone(@attributes)
@@ -39,15 +41,18 @@ module.exports = class Match extends Model
 
 	advance: (team)=>
 		parent = @get 'parent'
+		touched = []
 		if parent?
 			parent.team(parent.whichSlot(@), new MatchTeam(team.attributes))
 			parent.event().autoTitle()
+			touched.push parent
 		loserMatch = @get 'loserDropsTo'
 		if loserMatch?
-			# console.log loserMatch.slot
 			loser = if @teams()[0].get('name') is team.get('name') then @teams()[1] else @teams()[0]
 			loserMatch.match.team(loserMatch.slot, new MatchTeam(loser.attributes))
 			loserMatch.match.event().autoTitle()
+			touched.push loserMatch.match
+		touched
 
 	whichSlot: (childMatch)->
 		unless _.contains(@get('children'), childMatch)
@@ -58,6 +63,15 @@ module.exports = class Match extends Model
 
 	isLoser: ()=>
 		if @get('hasLoserSlot') then true else false
+
+	noTBDs: ()=>
+		hasTBD = _.find @teams(), (team)=>
+			team.get('name') is 'TBD' or team.get('name').match(/TBD$/)? or team.id is "5088cad2f767afae2e000005"
+		return !hasTBD?
+
+	started: ()=>
+		firstStart = @games().find (game)-> game.get('starts_at')?
+		return firstStart?
 
 	# convenience getters
 

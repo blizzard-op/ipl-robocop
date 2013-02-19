@@ -6,6 +6,8 @@ Streams = require 'collections/brackets/streams'
 GameSubView = require 'views/game-sub-view'
 MatchTeam = require 'models/brackets/match-team'
 MenuResizer = require 'utility/menu-resizer'
+Viper = require 'utility/viper'
+Mcclane = require 'utility/mcclane'
 
 module.exports = class MatchMenuView extends View
 	autoRender: true
@@ -14,7 +16,7 @@ module.exports = class MatchMenuView extends View
 	id: "match-menu"
 	className: "admin-menu"
 	events:
-		'click #start-game-btn' : ()-> @startGame()
+		'click button.start-game' : ()-> @startGame()
 		'click #reset-match-btn' : ()-> @resetMatchup()
 		'change .team-list' : (ev)-> @saveTeam(ev)
 		'change .best-of-input' : (ev)-> @saveBestOf(ev)
@@ -62,30 +64,36 @@ module.exports = class MatchMenuView extends View
 
 		@fillSelect @streams.models, '.stream-list', @model?.get('event').get('stream')?.name
 
+		if _.first(@model.selected).started()
+			@.$('.team-list').prop('disabled', 'disabled')
+
 		@.$('#start-time').datetimepicker
 			timeFormat: "hh:mm ttz"
 			showTimezone: false
 			timezone: "-0800"
-			hourGrid: 4
-			minuteGrid: 10
+			hourGrid: 6
+			minuteGrid: 15
 			stepMinute: 15,
 			onSelect: (dt, dpi)=>
 				@saveTime(dt)
 
-		@renderGroups()
-
-		if @model.games().first().get('status') isnt 'ready'
+		# @renderGroups()
+		if _.first(@model.selected).noTBDs()
 			@renderGames()
-			@.$('#start-game-btn').hide()
-		else
-			@.$('#reset-match-btn').hide()
 
 		MenuResizer.auto(@$el)
 		@
 
 	renderGames: ()=>
+		startButtons = 0
+		underways = false
 		@gameViews = @model.games().map (game)=>
-			new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+			gv = new GameSubView({model:game}).setMatchup(@model.matchup()).render()
+			if gv.model.get('status') is 'underway'
+				underways = true
+			if gv.model.get('status') is 'ready' and startButtons++ > 0 or underways
+				gv.$('.start-game').hide()
+			gv
 		false
 
 	resetMatchup: ()=>
@@ -94,18 +102,23 @@ module.exports = class MatchMenuView extends View
 		false
 
 	startGame: ()=>
-		@model.games().first().set 'status', 'active'
+		firstGame = @model.games().firstReady()
+		firstGame.start()
+		Viper.saveGame _.first(@model.selected).event(), firstGame
+		Mcclane.save()
 		@render()
 		false
 
 	endGame: (ev)=>
 		result = @model.matchup().pointFor @.$(ev.currentTarget).text()
-		@model.games().next(result.winner)
+		prevGame = @model.games().next(result.winner)
 		if result.matchDecided
 			@model.games().each (game)=> game.set 'status', 'finished'
-			@model.advance(result.winner)
+			toSave = @model.advance(result.winner)
+			Viper.saveMatches toSave
 		@render()
-		mediator.publish 'save-bracket'
+		Viper.saveGame _.first(@model.selected).event(), prevGame
+		Mcclane.save()
 		false
 
 	fillSelect: (list, elName, defaultVal=null)=>
@@ -119,6 +132,7 @@ module.exports = class MatchMenuView extends View
 		teams = _.clone(@model.teams())
 		newName = if $(ev.currentTarget).val() is '' then 'TBD' else $(ev.currentTarget).val()
 		teams[parseInt($(ev.currentTarget).attr('slot'))] = @bracket.get('teams').where({name: newName})[0]
+		console.log teams[parseInt($(ev.currentTarget).attr('slot'))]
 		_.each teams, (team, i)=>
 			unless team?
 				teams[i] = new MatchTeam()
@@ -126,7 +140,9 @@ module.exports = class MatchMenuView extends View
 
 		teamNames = _.map teams, (team)=> team.get 'name'
 		@model.event().set 'title', teamNames.join(" vs. ")
-		mediator.publish 'save-bracket'
+		Viper.saveMatches @model.selected
+		Mcclane.save()
+
 		@render()
 
 	renderGroups: (ev)->
@@ -142,10 +158,13 @@ module.exports = class MatchMenuView extends View
 
 	saveTitle: (ev)->
 		@model.get('event').set 'title', $(ev.currentTarget).val()
+		Viper.saveEvents _.map(@model.selected, (match)->match.event())
+		Mcclane.save()
 
 	saveBestOf:(ev)->
 		@model.matchup().set 'best_of', parseInt @.$(ev.currentTarget).val()
-		mediator.publish 'save-bracket'
+		Viper.saveMatchups _.map(@model.selected, (match)->match.event())
+		Mcclane.save()
 
 	selectionChanged: (selected) =>
 		@toolbar.openMenu 'match-menu'
@@ -163,10 +182,11 @@ module.exports = class MatchMenuView extends View
 				name: sName
 		else
 			@model.get('event').set 'stream', null
-		mediator.publish 'save-bracket'
+		Viper.saveEvents _.map(@model.selected, (match)->match.event())
+		Mcclane.save()
 
 	saveTime: (time)=>
 		@model.event().set 'starts_at', time
 		@model.event().set 'ends_at', moment(time, "MM/DD/YYYY hh:mm a").add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
-		mediator.publish 'save-bracket'
-
+		Viper.saveEvents _.map(@model.selected, (match)->match.event())
+		Mcclane.save()
