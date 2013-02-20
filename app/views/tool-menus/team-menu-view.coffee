@@ -78,10 +78,16 @@ module.exports = class TeamMenuView extends View
 		newTeam = @.$(ev.currentTarget).parent().text().trim()
 		teamOb = $(ev.currentTarget).parents('li').data 'team'
 		delete teamOb.id
+		Viper.saveTeam(teamOb, ()=>
+			if teamOb.id?
+				@idLookup[teamOb.get('name')] = teamOb.id
+				@teamlist.push teamOb.get('name')
+				@render()
+		)
 		false
 
 	addTeamToLookup: ()=>
-
+		true
 
 	loadTeams: ()=>
 		$.ajax
