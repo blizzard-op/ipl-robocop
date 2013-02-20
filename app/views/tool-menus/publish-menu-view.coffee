@@ -21,7 +21,7 @@ module.exports = class PublishMenuView extends View
 
 	publishShow: ()->
 		@toolbar.openMenu 'publish-menu'
-		@urls.directLink = BracketUrls.viewBase+"/brackets/v6/view/" + @bracket.get 'slug'
+		@urls.directLink = BracketUrls.viewBase + "/" + @bracket.get 'slug'
 		@render()
 
 	selectInput: (ev)=>
