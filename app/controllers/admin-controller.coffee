@@ -12,25 +12,35 @@ Mcclane = require 'utility/mcclane'
 module.exports = class AdminsController extends Controller
 	index: ->
 		@bracket = new Bracket()
-		@bracketLoaded()
+		@loadConfig
+			success: (data)=>
+				@config = data
+				@bracketLoaded()
+			error: (data, xhr)-> console.log "could not load config"
 
 	editBracket: (routeVars) ->
 		@bracket = new Bracket()
-		@bracketLoaded()
-		@bracket.fetch
-			url: BracketUrls.apiBase + "/brackets/v6/api/"+routeVars.slug
+		@loadConfig
 			success: (data)=>
-				@bracketView.render()
-			# error: (model, xhr)=>
-				# console.log xhr.status
+				@config = data
+				@bracketLoaded()
+				@bracket.fetch
+					url: BracketUrls.apiBase + "/brackets/v6/api/"+routeVars.slug
+					success: (data)=>
+						@bracketView.render()
+			error: (data, xhr)-> console.log "could not load config"
 
-	bracketLoaded: ()->
+	bracketLoaded: ()=>
 		options =
 			domain: ".ign.com"
-		$.cookies.set("robocopAuth", "yourmovecreep", options)
+		$.cookies.set(@config.authKey, @config.authSecret, options)
 		@tools = new Tools()
 		Mcclane.model = @bracket
 		@workspaceView = new AdminWorkspaceView
 			collection: @tools
 			model: @bracket
 		@bracketView = new BracketView({model: @bracket})
+
+	loadConfig: (options)=>
+		options.url = "/config.json"
+		$.ajax options
