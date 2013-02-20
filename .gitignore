@@ -43,3 +43,5 @@ build/buildinfo.properties
 build/config/buildinfo.properties
 
 node_modules/*
+app/assets/config.json
+public/config.json
