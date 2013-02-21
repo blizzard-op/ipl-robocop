@@ -32,11 +32,11 @@ module.exports = class MatchMenuView extends View
 		@streams.fetch
 			url: "http://esports.ign.com/content/v2/streams.json?callback=?"
 			cached:true
-		$.ajax
-			url: "http://esports.ign.com/content/v2/groups.json"
-			cached:true
-			success:(data)=>
-				@groups = data
+		# $.ajax
+		# 	url: "http://esports.ign.com/content/v2/groups.json"
+		# 	cached:true
+		# 	success:(data)=>
+		# 		@groups = data
 		@bracket = options.bracket
 
 	render:=>
