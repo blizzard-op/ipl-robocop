@@ -1,5 +1,8 @@
 exports.config =
   # See http://brunch.readthedocs.org/en/latest/config.html for documentation.
+  server:
+    port: 7777
+    base: '/brackets/v6/admin'
   files:
     javascripts:
       joinTo:
