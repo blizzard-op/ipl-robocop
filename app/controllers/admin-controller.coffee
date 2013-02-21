@@ -42,5 +42,5 @@ module.exports = class AdminsController extends Controller
 		@bracketView = new BracketView({model: @bracket})
 
 	loadConfig: (options)=>
-		options.url = "config.json"
+		options.url = "/brackets/v6/admin/javascripts/config.json"
 		$.ajax options
