@@ -5,8 +5,8 @@ module.exports = class Event extends Model
 	defaults: ()->
 		title: "TBD vs. TBD"
 		stream: null
-		starts_at: moment().subtract('years', 10).format("MM/DD/YYYY hh:mm aZ") # moment(String(moment().year()), "YYYY").format("MM/DD/YYYY hh:mm aZ")
-		ends_at: moment().subtract('years', 10).add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ") # moment(String(moment().year()), "YYYY").add('hours', 1).format("MM/DD/YYYY hh:mm aZ")
+		starts_at: moment(String(moment().year()), "YYYY").format("MM/DD/YYYY hh:mm aZ") # moment().subtract('years', 10).format("MM/DD/YYYY hh:mm aZ")
+		ends_at: moment(String(moment().year()), "YYYY").add('hours', 1).format("MM/DD/YYYY hh:mm aZ") #moment().subtract('years', 10).add('hours', 1).format("YYYY-MM-DDTHH:mm:ssZ")
 		rebroadcast: false
 		matchup: new Matchup()
 		groups: [{
