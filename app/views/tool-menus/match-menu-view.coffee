@@ -69,8 +69,8 @@ module.exports = class MatchMenuView extends View
 
 		@.$('#start-time').datetimepicker
 			timeFormat: "hh:mm ttz"
-			showTimezone: false
-			timezone: "-0800"
+			# showTimezone: false
+			# timezone: "-0800"
 			hourGrid: 6
 			minuteGrid: 15
 			stepMinute: 15,
