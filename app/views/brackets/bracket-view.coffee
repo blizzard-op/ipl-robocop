@@ -20,7 +20,7 @@ module.exports = class BracketView extends View
 			@render()
 		@listenTo @model.get('groups'), 'add', ()=>
 			@render()
-		Padding.match.width = 180
+		Padding.match.width = 200
 		Padding.match.height = 74
 		@padding = padding
 		@renderCount = 0

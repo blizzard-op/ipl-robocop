@@ -1,7 +1,14 @@
-{{#each teams}}
-	<span class="team-label">{{this.name}}</span>
-	<span class="team-score">{{this.points}}</span>
-{{/each}}
+<div class="team-container">
+	{{#each teams}}
+		<span class="team-label">{{this.name}}</span>
+	{{/each}}
+</div>
+<div class="score-container">
+	{{#each teams}}
+		<span class="team-score">{{this.points}}</span>
+	{{/each}}
+</div>
+
 {{#if time}}
 	<div class="time-rider"><i class="icon-time"></i> {{time}}</div>
 {{/if}}

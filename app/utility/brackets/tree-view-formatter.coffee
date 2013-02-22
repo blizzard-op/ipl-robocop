@@ -21,7 +21,7 @@ module.exports = class TreeViewFormatter
 			root.set 'transform2d', t2d
 		else
 			rounds = Rounds.convert root
-			@singleTree(rounds, xSpacing, ySpacing)
+			@singleTree(rounds, xSpacing+40, ySpacing)
 
 	@singleTree: (rounds, xSpacing, ySpacing)->
 		startRound = 0
