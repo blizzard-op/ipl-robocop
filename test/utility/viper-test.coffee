@@ -8,11 +8,20 @@ describe 'Save Event to Viper', ->
 		@testOb = JSON.parse(@testJSON)
 		@model.set @model.parse(@testOb)
 
-	# it 'should be be able to sync with Viper', (done)->
-	# 	Viper.saveEvent(@model, done)
+	it 'should be be able to sync with Viper', (done)->
+		Viper.saveEvent(@model, done)
 
-	# it 'should have an id after save',->
-	# 	expect(@model.id).to.exist
+	it 'should have an id after save', ->
+		expect(@model.id).to.exist
+		@id1 = @model.id
+
+	it 'should be able to reset itself in Viper', (done)->
+		Viper.resetEvent(@model, {success: done})
+		expect(@model.id).to.exist
+
+	it 'should have a new id after reset', ->
+		expect(@model.id).to.exist
+		expect(@model.id).to.not.equal(@id1)
 
 	after (done)->
 		@model.destroy
