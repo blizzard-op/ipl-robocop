@@ -58,3 +58,14 @@ module.exports = class Viper
 	@saveTeam: (team, callback=null)=>
 		team.save null, @defSync(callback)
 
+	@resetEvent:(event, options)=>
+		options.url = event.url()
+		options.type = 'DELETE'
+		if options.success?
+			cd = options.success
+			options.success = ()=>
+				delete event.id
+				delete event.get('matchup').id
+				@saveMatchup(event, cd)
+		$.ajax options
+
