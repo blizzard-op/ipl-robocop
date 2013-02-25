@@ -30,13 +30,15 @@ module.exports = class BracketEditorView extends BracketView
 	clickMatch: (ev)=>
 		unless ev.shiftKey is true
 			@deselect()
-		$(ev.currentTarget).addClass 'activeSelect'
-		@selected.push $(ev.currentTarget).data('match')
-		mediator.publish 'change:selected', @selected
+		unless $(ev.currentTarget).hasClass('activeSelect')
+			@selected.push $(ev.currentTarget).data('match')
+			$(ev.currentTarget).addClass 'activeSelect'
+			mediator.publish 'change:selected', @selected
 
 	deselect: ()=>
 		$('.match.activeSelect').removeClass 'activeSelect'
 		@selected = []
+
 	editTitle: (ev)=>
 		$(ev.currentTarget).addClass 'editing'
 		$(ev.currentTarget).find('input').focus().val @model.get('title')
