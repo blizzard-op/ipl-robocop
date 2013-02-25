@@ -47,6 +47,6 @@ module.exports = class BracketEditorView extends BracketView
 		$(ev.currentTarget).parent('span').removeClass 'editing'
 		newTitle = String($(ev.currentTarget).val().trim())
 		@model.set 'title', newTitle
-		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-')
+		@model.set 'slug', newTitle.toLowerCase().replace(/\ /g, '-').replace(/[^\w|-]/g, '')
 		@.$('.bracket-title h1').text @model.get 'title'
 		Mcclane.save()
