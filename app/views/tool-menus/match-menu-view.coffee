@@ -78,7 +78,7 @@ module.exports = class MatchMenuView extends View
 				@saveTime(dt)
 
 		# @renderGroups()
-		if _.first(@model.selected).noTBDs()
+		if @model.selected.length == 1 && _.first(@model.selected).noTBDs()
 			@renderGames()
 
 		MenuResizer.auto(@$el)
