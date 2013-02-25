@@ -9,7 +9,8 @@ describe 'TeamMenuView', ->
 		@teams = @bracket.get('teams')
 		@teams.reset( @sew.makeTeams() )
 		@view = new TeamMenuView({bracket: @bracket})
-
+		@view.idLookup['Megashock'] = '5088d119f767afaf68000002'
+		@view.idLookup['Orbit'] = '5088d119f767afaf68000005'
 
 	it 'should show 4 teams', ->
 		expect(@view.$el.find 'li').to.have.length 4
